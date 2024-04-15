@@ -1,0 +1,87 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/04 11:10:47 by sthiagar          #+#    #+#             */
+/*   Updated: 2024/02/04 11:24:55 by sthiagar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILO_H
+# define PHILO_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> //for memset()
+#include <unistd.h>
+#include <sys/time.h>
+#include <pthread.h>
+#include <errno.h> // for errorno returned by pthread_join();
+
+// GLOBAL VARIABLE to rememeber the exit code, the last exit code
+// stick the exit code for echo and exit?? 
+
+typedef struct s_philo
+{
+	pthread_t	td; //thread
+	int		tid;//thread id associated with thread
+	int		eating; //flag to check if eating. Is this necessary? no!
+	int		eat_count;//times this ph has eaten
+	int		eat_start;//time eating started
+	int		next_meal;//if cur_time > next meal, then end = 1
+	int 		r_fork;//they are positions in the arr of mutex in program
+	int 		l_fork;//they are positions in the arr of mutex in program
+}	t_philo;
+
+typedef struct s_program
+{
+	int	count;//number of philosophers
+	int	ttdie;
+	int	tteat;
+	int	ttsleep;
+	int	numeat;
+	int	toteatcount; //count * numeat, decrement as each ph eat at every turn
+	int	*fork;
+	int	end; //if any ph died, set this to 1
+	pthread_mutex_t *r_fork;//this is array of mutexes
+	pthread_mutex_t *l_fork;//this is array of mutexes
+	pthread_mutex_t *print_lock;//move to program
+	pthread_mutex_t *dead_lock;//move to program
+	t_philo	*ph;
+}	t_program;
+
+//philo_utils
+int	ft_atoi(const char *nptr);
+int	is_positive_digit(int argc, char **argv);
+int	r_fork_index(int i, int count);
+int	l_fork_index(int i, int count);
+
+//philo_threads
+void	thread_join(pthread_t thread);
+
+//philo_time
+long	get_time_ms();
+
+//philo_errors
+void	free_fork(t_program **sim);
+int	free_philo(t_program **sim);
+void	handle_error();
+
+//philo_init
+int	init_threads(t_program **sim);
+int	init_sim(t_program **sim, int argc, char **argv);
+int	*init_fork(int count);
+
+//philo_message
+
+//philo_tests
+void	*threadfn1(void *arg);
+void	*threadfn2(void *arg);
+int	sample_thread_simulation(t_program *ph);
+void	test_print(t_program *ph);
+void	print_fork_claimed(int *fork, int count);
+
+#endif
