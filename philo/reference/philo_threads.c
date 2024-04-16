@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 //create a new thread
 int	create_newthread()
@@ -98,15 +98,15 @@ void	thread_join(pthread_t thread)
 	printf("pthread_join() succeeded.\n");
 	else 
 	{
-	printf("pthread_join() failed with error code: %d\n", ret);
-	if (ret == ESRCH)
-	    printf("No such thread.\n");
-	else if (ret == EINVAL)
-	    printf("Invalid argument.\n");
-	else if (ret == EDEADLK)
-		printf("Deadlock. Thread waits for itself, or threads waiting for eachother.\n");
-	else
-	    printf("Unknown error.\n");
+		printf("pthread_join() failed with error code: %d\n", ret);
+		if (ret == ESRCH)
+		    printf("No such thread.\n");
+		else if (ret == EINVAL)
+		    printf("Invalid argument.\n");
+		else if (ret == EDEADLK)
+			printf("Deadlock. Thread waits for itself, or threads waiting for eachother.\n");
+		else
+	    		printf("Unknown error.\n");
 	}
 
 }

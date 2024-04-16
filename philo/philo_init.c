@@ -41,10 +41,10 @@ int	init_threads(t_program **sim)
 	while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
 	{
 		(*sim)->ph[i].tid = i;
-		(*sim)->ph[i].eating = 0;
-		(*sim)->ph[i].eat_count = 0;
-		(*sim)->ph[i].eat_start = 0;
+		(*sim)->ph[i].last_meal = 0;
 		(*sim)->ph[i].next_meal = 0;
+		(*sim)->ph[i].will_die_at = 0;
+		(*sim)->ph[i].num_meals = 0;
 		(*sim)->ph[i].l_fork = -1;
 		(*sim)->ph[i].r_fork = -1;
 		i++;
@@ -61,15 +61,16 @@ int	init_sim(t_program **sim, int argc, char **argv)
 	(*sim)->count = ft_atoi(argv[1]);
 	if ((*sim)->count > 200)
 		return (-1);//GRT_THAN_200
+	(*sim)->tstart = 0;
 	(*sim)->ttdie = ft_atoi(argv[2]);
 	(*sim)->tteat = ft_atoi(argv[3]);
 	(*sim)->ttsleep = ft_atoi(argv[4]);
 	(*sim)->numeat = -1;
-	(*sim)->toteatcount = -1;
+	(*sim)->numeatall = -1;
 	if (argc == 6)
 	{
 		(*sim)->numeat = ft_atoi(argv[5]);
-		(*sim)->toteatcount = (*sim)->count * (*sim)->numeat;//teminate if reached
+		(*sim)->numeatall = (*sim)->count * (*sim)->numeat;//teminate if reached
 	}	
 	(*sim)->fork = init_fork((*sim)->count);
 	if ((*sim)->fork == NULL)

@@ -28,30 +28,35 @@ void	test_print(t_program *sim)
 {
 	int	i;
 	
-	printf("Philosopher count %d\n",sim->count);
-	printf("time to die %d milliseconds\n",sim->ttdie);
-	printf("time to eat %d milliseconds\n",sim->tteat);
-	printf("time to sleep %d milliseconds\n",sim->ttsleep);
-	printf("Number of times Philosophers eat %d\n",sim->numeat);
-	printf("Total eat count %d\n",sim->toteatcount);
-	printf("Someone died? %d\n",sim->end);
+	printf("\nNumber of Ph: [%d]\n",sim->count);
+	printf("time start [%d] milliseconds\n",sim->tstart);
+	printf("time to die [%d] milliseconds\n",sim->ttdie);
+	printf("time to eat [%d] milliseconds\n",sim->tteat);
+	printf("time to sleep [%d] milliseconds\n",sim->ttsleep);
+	printf("each ph eats [%d] times\n",sim->numeat);
+	printf("Terminate when total eat count [%d]\n",sim->numeatall);
+
 	printf("fork status before claim:\n");
 	print_fork_claimed(sim->fork, sim->count);
+	
+	printf("Someone died? %d\n",sim->end);
+	printf("mutex right fork ptr %p\n", (void *)sim->r_fork);
+	printf("mutex left fork ptr %p\n", (void *)sim->l_fork);
 	printf("mutex print_lock ptr %p\n", (void *)sim->print_lock);
 	printf("mutex dead_lock ptr %p\n", (void *)sim->dead_lock);
-	i = 0;
+
 	printf("print each thread:\n");
-	
+	i = 0;
 	while (i < sim->count)
 	{
 		printf("==================\n");
 		printf("thread id [%d]\n",sim->ph[i].tid);
-		printf("eating yes/no [%d]\n",sim->ph[i].eating);
-		printf("eat count [%d]\n",sim->ph[i].eat_count);
-		printf("eat start time ms? [%d]\n",sim->ph[i].eat_start);
-		printf("next meal time ms? [%d]\n",sim->ph[i].next_meal);
-		printf("left fork [%d]\n",sim->ph[i].l_fork);
-		printf("right fork [%d]\n",sim->ph[i].r_fork);
+		printf("last meal eaten at [%d]\n",sim->ph[i].last_meal);
+		printf("next meal eat at [%d]\n",sim->ph[i].next_meal);
+		printf("will die at [%d]\n",sim->ph[i].will_die_at);
+		printf("meals eaten [%d]\n",sim->ph[i].num_meals);
+		printf("claimed a left fork [%d]\n",sim->ph[i].l_fork);
+		printf("claimed a right fork [%d]\n",sim->ph[i].r_fork);
 		i++;
 	}
 }
@@ -69,20 +74,6 @@ void	*threadfn2(void *arg)
 	if (arg != NULL)
 		printf("arg is not NULL\n");
 	printf("Hello from the detached thread 2!\n");
-	return (NULL);
-}
-
-void	*print_time(void *arg)
-{
-	int	tid;
-	struct	timeval currenttime;
-	
-	tid = *(int *)arg;
-	printf("Thread %d started.\n", tid);
-	gettimeofday(&currenttime, NULL);
-
-	printf("Current time in secs is %ld\n",currenttime.tv_sec);
-	printf("Current time in milliseconds %ld\n",get_time_ms());
 	return (NULL);
 }
 

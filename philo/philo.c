@@ -35,30 +35,12 @@ int	claim_fork(t_program **sim)
 	printf("ph[%d] left is %d, right is %d\n",i, (*sim)->ph[i].l_fork, (*sim)->ph[i].r_fork);
 		i++;
 	}
-	getchar();
 	return(0);
 }
 
 int	sim_activity()
 {
-	//if thinking
-	//	printf("X is thinking\n");
-	//else if sleep
-	//	printf("X is sleeping\n");
-	//	usleep();
-	//else if eating
-	//	lock right fork
-	//	printf("X has taken a fork\n");
-	//	lock left fork
-	//	printf("X has taken a fork\n");
-	//	printf("X is eating\n");
-	//	usleep();
-	//	unlock right fork
-	//	unlock left fork
-		
-	//else if died
-	//	update global variable
-	//	the observer function will print this philo has died?
+
 	return (0);
 }
 

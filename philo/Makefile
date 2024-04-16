@@ -14,8 +14,9 @@ CC = 		cc
 CFLAGS = 	-g -Wall -Werror -Wextra
 
 NAME = 		philo
-SOURCE = 	philo.c philo_error.c philo_utils.c philo_message.c \
-		philo_time.c philo_init.c philo_tests.c philo_threads.c \
+SOURCE = 	philo.c philo_free.c philo_utils.c philo_message.c \
+		philo_init.c philo_tests.c philo_time.c \
+		reference/philo_threads.c \
 	
 OBJECT =	$(patsubst %.c, %.o, $(SOURCE))
 HEADER = 	./philo.h

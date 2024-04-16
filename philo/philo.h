@@ -28,10 +28,10 @@ typedef struct s_philo
 {
 	pthread_t	td; //thread
 	int		tid;//thread id associated with thread
-	int		eating; //flag to check if eating. Is this necessary? no!
-	int		eat_count;//times this ph has eaten
-	int		eat_start;//time eating started
+	int		last_meal;//after eat, current time
 	int		next_meal;//if cur_time > next meal, then end = 1
+	int		will_die_at;
+	int		num_meals;//times this ph has eaten
 	int 		r_fork;//they are positions in the arr of mutex in program
 	int 		l_fork;//they are positions in the arr of mutex in program
 }	t_philo;
@@ -39,18 +39,22 @@ typedef struct s_philo
 typedef struct s_program
 {
 	int	count;//number of philosophers
-	int	ttdie;
-	int	tteat;
-	int	ttsleep;
+	int	tstart;
+	int	ttdie;//length of time before death
+	int	tteat;//length of time to eat
+	int	ttsleep;//length of time to sleep
 	int	numeat;
-	int	toteatcount; //count * numeat, decrement as each ph eat at every turn
-	int	*fork;
+	int	numeatall;//if numeat != -1, then = numeat x count 
+	int	*fork; //malloc for size of count
 	int	end; //if any ph died, set this to 1
+	
 	pthread_mutex_t *r_fork;//this is array of mutexes
 	pthread_mutex_t *l_fork;//this is array of mutexes
 	pthread_mutex_t *print_lock;//move to program
 	pthread_mutex_t *dead_lock;//move to program
+	
 	t_philo	*ph;
+	
 }	t_program;
 
 //philo_utils
@@ -65,7 +69,7 @@ void	thread_join(pthread_t thread);
 //philo_time
 long	get_time_ms();
 
-//philo_errors
+//philo_free
 void	free_fork(t_program **sim);
 int	free_philo(t_program **sim);
 void	handle_error();

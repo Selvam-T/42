@@ -32,3 +32,17 @@ long	get_time_ms()
 			+ currenttime.tv_usec / 1000;
 	return (millisecs);
 }
+
+void	*print_time(void *arg)
+{
+	int	tid;
+	struct	timeval currenttime;
+	
+	tid = *(int *)arg;
+	printf("Thread %d started.\n", tid);
+	gettimeofday(&currenttime, NULL);
+
+	printf("Current time in secs is %ld\n",currenttime.tv_sec);
+	printf("Current time in milliseconds %ld\n",get_time_ms());
+	return (NULL);
+}
