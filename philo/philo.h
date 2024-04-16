@@ -60,14 +60,19 @@ typedef struct s_program
 //philo_utils
 int	ft_atoi(const char *nptr);
 int	is_positive_digit(int argc, char **argv);
-int	r_fork_index(int i, int count);
-int	l_fork_index(int i, int count);
+void	mutex_init(t_program **sim);
+void	mutex_destroy(t_program **sim);
 
 //philo_threads
 void	thread_join(pthread_t thread);
 
 //philo_time
 long	get_time_ms();
+void	*print_time(void *arg);
+
+//philo fork
+int	r_fork_index(int i, int count);
+int	l_fork_index(int i, int count);
 
 //philo_free
 void	free_fork(t_program **sim);

@@ -1,36 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_init_free_utils.c                            :+:      :+:    :+:   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/04 12:04:59 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/02/04 12:07:53 by sthiagar         ###   ########.fr       */
+/*   Created: 2024/04/16 17:44:45 by sthiagar          #+#    #+#             */
+/*   Updated: 2024/04/16 17:44:49 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	r_fork_index(int i, int count)
+// 1) Any state change of a philosopher must be formatted as follows:
+//timestamp_in_ms X has taken a fork
+//timestamp_in_ms X is eating
+//timestamp_in_ms X is sleeping
+//timestamp_in_ms X is thinking
+//timestamp_in_ms X died
+
+// 2) Replace timestamp_in_ms with the current timestamp in milliseconds
+// and X with the philosopher number.
+
+void	mutex_init(t_program **sim)
 {
-	int	j;
-	
-	j = (i + 1) % count;
-	if (i < j)
-		return (i);
-	return (j);
+	pthread_mutex_init((*sim)->r_fork, NULL);
+	pthread_mutex_init((*sim)->l_fork, NULL);
+	pthread_mutex_init((*sim)->print_lock, NULL);
+	pthread_mutex_init((*sim)->dead_lock, NULL);
 }
 
-int	l_fork_index(int i, int count)
+void	mutex_destroy(t_program **sim)
 {
-	int	j;
-	
-	j = (i + 1) % count;
-	if (i > j)
-		return (i);
-	return (j);
+	pthread_mutex_destroy((*sim)->r_fork);
+	pthread_mutex_destroy((*sim)->l_fork);
+	pthread_mutex_destroy((*sim)->print_lock);
+	pthread_mutex_destroy((*sim)->dead_lock);
 }
+
+
 
 int	is_positive_digit(int argc, char **argv)
 {
@@ -74,4 +82,3 @@ int	ft_atoi(const char *nptr)
 	}
 	return (res * sign);
 }
-

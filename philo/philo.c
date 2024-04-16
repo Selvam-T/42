@@ -12,19 +12,15 @@
 
 #include "philo.h"
 
-int	claim_fork(t_program **sim)
+void	*claim_fork(void *ptr)
 {
-	int	left;
-	int	right;
-	int	i;
-
-	i = 0;
-	while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
-	{
-		left = l_fork_index(i, (*sim)->count);
+	t_program	*sim;
+	
+	sim = (t_program *)ptr;
+	//int	left;
+	//int	right;
+	/*left = l_fork_index(i, (*sim)->count);
 		right = r_fork_index(i, (*sim)->count);
-	//printf("i is %d, left is %d, right is %d\n",i, left, right);
-	//printf("b4 ph left is %d, ph right is %d\n",(*sim)->ph[i].l_fork, (*sim)->ph[i].r_fork);
 		if ((*sim)->fork[left] == -1 && (*sim)->fork[right] == -1)
 		{
 			(*sim)->ph[i].l_fork = left;
@@ -32,16 +28,31 @@ int	claim_fork(t_program **sim)
 			(*sim)->ph[i].r_fork = right;
 			(*sim)->fork[left] = i;	
 		}
-	printf("ph[%d] left is %d, right is %d\n",i, (*sim)->ph[i].l_fork, (*sim)->ph[i].r_fork);
-		i++;
-	}
-	return(0);
+		i++;*/
+	return NULL;
 }
 
-int	sim_activity()
+int	sim_activity(t_program **sim)
 {
+	int	i;
 
-	return (0);
+	mutex_init(sim);
+	i = 0;
+	//create
+	while (i < (*sim)->count)
+	{
+		(*sim)->ph[i].tid = i;
+		pthread_create(&(*sim)->ph[i].td, NULL, claim_fork, (void *)sim);
+		i++;
+	}
+	i = 0;
+	//join
+	//while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
+	//{
+	//	i++;
+	//}
+	mutex_destroy(sim);
+	return(0);
 }
 
 int	program_monitor()
@@ -68,8 +79,8 @@ int	main(int argc, char *argv[])
 			return (free_philo(&sim));
 	}
 	//test_print(sim);
-	claim_fork(&sim);
-	//sample_thread_simulation(sim);
+	//claim_fork(&sim);
+	sim_activity(&sim);
 	free_philo(&sim);
 	return (0);
 }	
