@@ -12,23 +12,31 @@
 
 #include "philo.h"
 
-void	free_fork(t_program **sim)
+int	destroy_forks(pthread_mutex_t *fork, int count)
 {
-	free((*sim)->fork);
-	(*sim)->fork = NULL;
-//printf("---100---\n");
+	//pthread_mutex_destroy(&mutex);
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		pthread_mutex_destroy(&fork[i]);
+		i++;
+	}
+	return (-1);
 }
 
 int	free_philo(t_program **sim)
 {
-	free_fork(sim);
-//printf("---200---\n");
-	free((*sim)->ph);
-	(*sim)->ph = NULL;
-//printf("---300---\n");
-	free(*sim);
-	*sim = NULL;
-//printf("---400---\n");
+	if (sim && (*sim))
+	{
+		destroy_forks((*sim)->fork, (*sim)->count);
+		if ((*sim)->ph)
+			free((*sim)->ph);
+		(*sim)->ph = NULL;
+		free(*sim);
+		*sim = NULL;
+	}
 	return (-1);
 }
 

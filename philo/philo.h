@@ -26,32 +26,30 @@
 
 typedef struct s_philo
 {
-	pthread_t	td; //thread
-	int		tid;//thread id associated with thread
-	int		last_meal;//after eat, current time
-	int		next_meal;//if cur_time > next meal, then end = 1
-	int		will_die_at;
-	int		num_meals;//times this ph has eaten
-	int 		r_fork;//they are positions in the arr of mutex in program
-	int 		l_fork;//they are positions in the arr of mutex in program
+	pthread_t		td; //thread
+	int				tid;//thread id associated with thread
+	int				last_meal;//after eat, current time
+	int				next_meal;//if cur_time > next meal, then end = 1
+	int				will_die_at;
+	int				num_meals;//times this ph has eaten
+	pthread_mutex_t	r_fork;//take addr of fork[i]
+	pthread_mutex_t	l_fork;//take addr of fork[i + 1]
 }	t_philo;
 
 typedef struct s_program
 {
 	int	count;//number of philosophers
-	int	tstart;
 	int	ttdie;//length of time before death
 	int	tteat;//length of time to eat
 	int	ttsleep;//length of time to sleep
-	int	numeat;
-	int	numeatall;//if numeat != -1, then = numeat x count 
-	int	*fork; //malloc for size of count
+	int	numeat;//max meals each ph eat
+	int	eatremain;//set to ph count, -- as each ph >= numeat
 	int	end; //if any ph died, set this to 1
+	int index;//loop index to assign tid
 	
-	pthread_mutex_t *r_fork;//this is array of mutexes
-	pthread_mutex_t *l_fork;//this is array of mutexes
-	pthread_mutex_t *print_lock;//move to program
-	pthread_mutex_t *dead_lock;//move to program
+	pthread_mutex_t *fork;//this is array of mutexes
+	//pthread_mutex_t *print_lock;//move to program
+	//pthread_mutex_t *dead_lock;//move to program
 	
 	t_philo	*ph;
 	
@@ -75,14 +73,14 @@ int	r_fork_index(int i, int count);
 int	l_fork_index(int i, int count);
 
 //philo_free
-void	free_fork(t_program **sim);
+int	destroy_forks(pthread_mutex_t *fork, int count);
 int	free_philo(t_program **sim);
 void	handle_error();
 
 //philo_init
 int	init_threads(t_program **sim);
 int	init_sim(t_program **sim, int argc, char **argv);
-int	*init_fork(int count);
+pthread_mutex_t *init_fork(int count);
 
 //philo_message
 

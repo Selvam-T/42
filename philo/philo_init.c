@@ -12,41 +12,46 @@
 
 #include "philo.h"
 
-int	*init_fork(int count)
+pthread_mutex_t *init_fork(int count)
 {
-	int	*fork;
+	pthread_mutex_t 	*fork;
 	int	i;
-	
-	fork = (int *)malloc(sizeof(int) * count);
+
+	fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * count);
 	if (fork == NULL)
-		return (NULL);//ph is malloc after this, hence nothing to free in calling func
+		return (NULL);
 	i = 0;
 	while (i < count)
 	{
-		fork[i] = -1;//-1 is unclaimed initially
+		pthread_mutex_init(&fork[i], NULL);
 		i++;
 	}
-	return (fork);	
+	return (fork);
 }
 
 int	init_threads(t_program **sim)
 {
 	int	i;
+	int r;
+	int l;
 	
 	//malloc for count, no need extra to null terminate, we know count
 	(*sim)->ph = (t_philo *)malloc(sizeof(t_philo) * (*sim)->count);
 	if ((*sim)->ph == NULL)
-		return (-2); //-2 free fork in calling function
+		return (-1);
+	
 	i = 0;
 	while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
 	{
+		r = r_fork_index(i, (*sim)->count);
+		l = l_fork_index(i, (*sim)->count);
 		(*sim)->ph[i].tid = i;
 		(*sim)->ph[i].last_meal = 0;
 		(*sim)->ph[i].next_meal = 0;
 		(*sim)->ph[i].will_die_at = 0;
 		(*sim)->ph[i].num_meals = 0;
-		(*sim)->ph[i].l_fork = -1;
-		(*sim)->ph[i].r_fork = -1;
+		(*sim)->ph[i].r_fork = (*sim)->fork[r];;
+		(*sim)->ph[i].l_fork = (*sim)->fork[l];;
 		i++;
 	}
 	return (1);
@@ -61,25 +66,23 @@ int	init_sim(t_program **sim, int argc, char **argv)
 	(*sim)->count = ft_atoi(argv[1]);
 	if ((*sim)->count > 200)
 		return (-1);//GRT_THAN_200
-	(*sim)->tstart = 0;
 	(*sim)->ttdie = ft_atoi(argv[2]);
 	(*sim)->tteat = ft_atoi(argv[3]);
 	(*sim)->ttsleep = ft_atoi(argv[4]);
 	(*sim)->numeat = -1;
-	(*sim)->numeatall = -1;
+	(*sim)->eatremain = -1;
 	if (argc == 6)
 	{
 		(*sim)->numeat = ft_atoi(argv[5]);
-		(*sim)->numeatall = (*sim)->count * (*sim)->numeat;//teminate if reached
+		(*sim)->eatremain = (*sim)->count;//teminate if reached 0
 	}	
 	(*sim)->fork = init_fork((*sim)->count);
 	if ((*sim)->fork == NULL)
 		return (-1);
 	(*sim)->end = 0; //1 true, 0 not true, terminate if true
-	(*sim)->r_fork = NULL;
-	(*sim)->l_fork = NULL;
-	(*sim)->print_lock = NULL;
-	(*sim)->dead_lock = NULL;
+	(*sim)->index = -1; //for pthread_create loop index to assign tid
+	//(*sim)->print_lock = NULL;
+	//(*sim)->dead_lock = NULL;
 	(*sim)->ph = NULL;
-	return (init_threads(sim));//return 1 success, -2 malloc fail
+	return (init_threads(sim));//return 1 success, -2 malloc fail indicate free forks
 }

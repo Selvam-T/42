@@ -29,17 +29,16 @@ void	test_print(t_program *sim)
 	int	i;
 	
 	printf("\nNumber of Ph: [%d]\n",sim->count);
-	printf("time start [%d] milliseconds\n",sim->tstart);
 	printf("time to die [%d] milliseconds\n",sim->ttdie);
 	printf("time to eat [%d] milliseconds\n",sim->tteat);
 	printf("time to sleep [%d] milliseconds\n",sim->ttsleep);
 	printf("each ph eats [%d] times\n",sim->numeat);
-	printf("Terminate when total eat count [%d]\n",sim->numeatall);
+	printf("Terminate when total eat count [%d]\n",sim->eatremain);
 
 	printf("fork status before claim:\n");
 	print_fork_claimed(sim->fork, sim->count);
-	
-	printf("Someone died? %d\n",sim->end);
+	printf("%s \n", sim->end ? "Someone died" : "No one died");
+	printf("index to assign tid [%d]\n",sim->index);
 	printf("mutex right fork ptr %p\n", (void *)sim->r_fork);
 	printf("mutex left fork ptr %p\n", (void *)sim->l_fork);
 	printf("mutex print_lock ptr %p\n", (void *)sim->print_lock);

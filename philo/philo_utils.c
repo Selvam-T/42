@@ -22,24 +22,6 @@
 // 2) Replace timestamp_in_ms with the current timestamp in milliseconds
 // and X with the philosopher number.
 
-void	mutex_init(t_program **sim)
-{
-	pthread_mutex_init((*sim)->r_fork, NULL);
-	pthread_mutex_init((*sim)->l_fork, NULL);
-	pthread_mutex_init((*sim)->print_lock, NULL);
-	pthread_mutex_init((*sim)->dead_lock, NULL);
-}
-
-void	mutex_destroy(t_program **sim)
-{
-	pthread_mutex_destroy((*sim)->r_fork);
-	pthread_mutex_destroy((*sim)->l_fork);
-	pthread_mutex_destroy((*sim)->print_lock);
-	pthread_mutex_destroy((*sim)->dead_lock);
-}
-
-
-
 int	is_positive_digit(int argc, char **argv)
 {
 	int	i;
