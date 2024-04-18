@@ -32,8 +32,10 @@ typedef struct s_philo
 	int				next_meal;//if cur_time > next meal, then end = 1
 	int				will_die_at;
 	int				num_meals;//times this ph has eaten
-	pthread_mutex_t	r_fork;//take addr of fork[i]
-	pthread_mutex_t	l_fork;//take addr of fork[i + 1]
+	//pthread_mutex_t	r_fork;//take addr of fork[i]
+	//pthread_mutex_t	l_fork;//take addr of fork[i + 1]
+	int				r_fork;//take addr of fork[i]
+	int 			l_fork;//take addr of fork[i + 1]
 }	t_philo;
 
 typedef struct s_program
@@ -89,6 +91,6 @@ void	*threadfn1(void *arg);
 void	*threadfn2(void *arg);
 int	sample_thread_simulation(t_program *ph);
 void	test_print(t_program *ph);
-void	print_fork_claimed(int *fork, int count);
+void	print_fork_claimed(pthread_mutex_t *fork, int count);
 
 #endif

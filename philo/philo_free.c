@@ -14,16 +14,21 @@
 
 int	destroy_forks(pthread_mutex_t *fork, int count)
 {
-	//pthread_mutex_destroy(&mutex);
 	int	i;
-
+printf("destroy forks mutex\n");
 	i = 0;
 	while (i < count)
 	{
-		pthread_mutex_destroy(&fork[i]);
+		printf("destroy %d\n",i);
+		if (fork[i] != NULL)
+			pthread_mutex_destroy(&fork[i]);
+		fork[i] == NULL;
 		i++;
 	}
-	return (-1);
+	free (fork);
+	fork = NULL;
+printf("destroy fork mutex successful\n");
+	return (0);
 }
 
 int	free_philo(t_program **sim)

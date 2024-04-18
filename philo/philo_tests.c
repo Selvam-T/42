@@ -12,17 +12,18 @@
 
 #include "philo.h"
 
-void	print_fork_claimed(int *fork, int count)
+/*
+void	print_fork_claimed(pthread_mutex_t *fork, int count)
 {
 	int	i;
 	
 	i = 0;
 	while (i < count)
 	{
-		printf("\t fork [%d] is claimed by p[%d]\n", i, fork[i]);
+		printf("\t fork [%d] is claimed by p[%d]\n", i, (int)fork[i]);
 		i++;
 	}
-}
+}*/
 
 void	test_print(t_program *sim)
 {
@@ -36,13 +37,9 @@ void	test_print(t_program *sim)
 	printf("Terminate when total eat count [%d]\n",sim->eatremain);
 
 	printf("fork status before claim:\n");
-	print_fork_claimed(sim->fork, sim->count);
 	printf("%s \n", sim->end ? "Someone died" : "No one died");
 	printf("index to assign tid [%d]\n",sim->index);
-	printf("mutex right fork ptr %p\n", (void *)sim->r_fork);
-	printf("mutex left fork ptr %p\n", (void *)sim->l_fork);
-	printf("mutex print_lock ptr %p\n", (void *)sim->print_lock);
-	printf("mutex dead_lock ptr %p\n", (void *)sim->dead_lock);
+
 
 	printf("print each thread:\n");
 	i = 0;
@@ -54,8 +51,7 @@ void	test_print(t_program *sim)
 		printf("next meal eat at [%d]\n",sim->ph[i].next_meal);
 		printf("will die at [%d]\n",sim->ph[i].will_die_at);
 		printf("meals eaten [%d]\n",sim->ph[i].num_meals);
-		printf("claimed a left fork [%d]\n",sim->ph[i].l_fork);
-		printf("claimed a right fork [%d]\n",sim->ph[i].r_fork);
+		
 		i++;
 	}
 }
@@ -99,7 +95,7 @@ int	sample_thread_simulation(t_program *sim)
 	
 	printf("Main thread started.\n");
 	i = 0;
-	while (i < sim->count)//n, 0, 1, 2...n clockwise
+	while (i < sim->count)
 	{
 		pthread_create(&sim->ph[i].td, NULL, print_time, (void *)&sim->ph[i].tid);
 		i++;

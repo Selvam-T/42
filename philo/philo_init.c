@@ -16,42 +16,39 @@ pthread_mutex_t *init_fork(int count)
 {
 	pthread_mutex_t 	*fork;
 	int	i;
-
+printf("init_fork mutex start\n");
 	fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * count);
 	if (fork == NULL)
 		return (NULL);
 	i = 0;
 	while (i < count)
 	{
-		pthread_mutex_init(&fork[i], NULL);
+		if (pthread_mutex_init(&fork[i], NULL) != 0)
+			return (NULL);
 		i++;
 	}
+printf("init_fork mutex success\n\n");
 	return (fork);
 }
 
 int	init_threads(t_program **sim)
 {
 	int	i;
-	int r;
-	int l;
 	
-	//malloc for count, no need extra to null terminate, we know count
 	(*sim)->ph = (t_philo *)malloc(sizeof(t_philo) * (*sim)->count);
 	if ((*sim)->ph == NULL)
 		return (-1);
 	
 	i = 0;
-	while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
+	while (i < (*sim)->count)
 	{
-		r = r_fork_index(i, (*sim)->count);
-		l = l_fork_index(i, (*sim)->count);
 		(*sim)->ph[i].tid = i;
 		(*sim)->ph[i].last_meal = 0;
 		(*sim)->ph[i].next_meal = 0;
 		(*sim)->ph[i].will_die_at = 0;
 		(*sim)->ph[i].num_meals = 0;
-		(*sim)->ph[i].r_fork = (*sim)->fork[r];;
-		(*sim)->ph[i].l_fork = (*sim)->fork[l];;
+		(*sim)->ph[i].r_fork = r_fork_index(i, (*sim)->count);
+		(*sim)->ph[i].l_fork = l_fork_index(i, (*sim)->count);
 		i++;
 	}
 	return (1);

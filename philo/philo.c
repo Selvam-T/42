@@ -12,77 +12,73 @@
 
 #include "philo.h"
 
-//deadlock avoidance strategies
-//i)   avoid circular dependencies
-//ii)  resource ordering
-//iii) implement timeout
-//iv)  careful design
-
-//race condition avoidance strategy
-//i) ensure only one thread can access shared resource at a time
-//ii) mutex
-//iii) sephamores
-//iv) atomic operations
-
-void	*sim_routine(void *ptr)
+void	*sim_routine(void *ptr) 
 {
+	//last meal, next meal, will die at, num meals
 	t_program	*sim;
 	int 		i;
-	printf("sim_routine\n");
+	
 	sim = (t_program *)ptr;
-	i = sim->index;
-	printf("Created tid [%d]\n",sim->ph[i].tid);
-	printf("last meal eaten at [%d]\n",sim->ph[i].last_meal);
-	printf("next meal eat at [%d]\n",sim->ph[i].next_meal);
-	printf("will die at [%d]\n",sim->ph[i].will_die_at);
-	printf("meals eaten [%d]\n",sim->ph[i].num_meals);
-	printf("claimed a left fork \n");
-	printf("claimed a right fork \n");
-	//int	left;
-	//int	right;
-	/*left = l_fork_index(i, (*sim)->count);
-		right = r_fork_index(i, (*sim)->count);
-		if ((*sim)->fork[left] == -1 && (*sim)->fork[right] == -1)
-		{
-			(*sim)->ph[i].l_fork = left;
-			(*sim)->fork[right] = i;
-			(*sim)->ph[i].r_fork = right;
-			(*sim)->fork[left] = i;	
-		}
-		i++;*/
+	i = sim->index;//index of ph
+	
+	//IF NUMEALS >= NUM EAT ---> DETACH_THREAD, RETURN
+	
+	//MONITOR() will do this. NOT done here
+	//IF NEXT MEAL < CURTIME --> LOCK END 
+	// END = 1, UNLOCK END
+	
+	//LOCK RIGHT FORK
+	//LOCK LEFT FORK
+	//LAST MEAL = GET CUR TIME
+	//NEXT MEAL = LASTMEAL + TT DIE
+	//WILL DIE AT = NEXT MEAL
+	//PRINT EATING
+	//NUMMEALS ++
+	//EATREMAIN ??? DON'T NEED?
+	//USLEEP TTEAT
+	//UNLOCK RIGHT FORK
+	//UNLOCK LEFT FORK
+	//PRINT SLEEPING
+	//USLEEP TTSLEEP
+	//BALANCE TIME = NEXT MEAL - CUR TIME??? DON'T NEED?
+	//PRINT THINKING
+	//USLEEP BALANCE TIME???
+	
+	
 	return NULL;
 }
 
-//eat sleep think eat
 int	sim_activity(t_program **sim)
 {
 	int	i;
 
+	//create thread -->td, tid
 	i = 0;
-	//create
 	while (i < (*sim)->count)
 	{
-		printf("sim activity for [%d]\n",i);
+		printf("create thread for ph [%d]\n",i);
 		(*sim)->ph[i].tid = i;
-		pthread_create(&(*sim)->ph[i].td, NULL, sim_routine, (void *)sim);
+		if (pthread_create(&(*sim)->ph[i].td, NULL, \
+			sim_routine, (void *)sim) != 0)
+			return (-1);
 		i++;
 	}
-	//i = 0;
-	//join
-	//while (i < (*sim)->count)//n, 0, 1, 2...n clockwise
-	//{
-	//	i++;
-	//}
-	destroy_forks((*sim)->fork, (*sim)->count);
+
+	//join thread
+	i = 0;
+	while (i < (*sim)->count)
+	{
+		printf("join ph [%d]\n",i);
+		if (pthread_join((*sim)->ph[i].td, NULL) != 0)
+			return (-1);
+		i++;
+	}
+	//destroy_forks((*sim)->fork, (*sim)->count);
 	return(0);
 }
 
 int	program_monitor()
 {
-	//if (time_to_die > current_time - last meal && state != eating)
-	//	simulation_end = 1;
-	//if (thread1_eat + thread2_eat ... + threadn_eat > total_Eat)
-	//	simulation_end = 1;
 	return (0);
 }
 
