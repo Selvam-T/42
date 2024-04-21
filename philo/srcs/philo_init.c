@@ -10,25 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-pthread_mutex_t *init_fork(int count)
+pthread_mutex_t *init_vork(int count)
 {
-	pthread_mutex_t 	*fork;
+	pthread_mutex_t 	*vork;
 	int	i;
-printf("init_fork mutex start\n");
-	fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * count);
-	if (fork == NULL)
+
+	vork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * count);
+	if (vork == NULL)
 		return (NULL);
 	i = 0;
 	while (i < count)
 	{
-		if (pthread_mutex_init(&fork[i], NULL) != 0)
+		//printf("init_vork[%d] mutex\n",i);//DELETE
+		if (pthread_mutex_init(&vork[i], NULL) != 0)
 			return (NULL);
 		i++;
 	}
-printf("init_fork mutex success\n\n");
-	return (fork);
+	return (vork);
 }
 
 int	init_threads(t_program **sim)
@@ -45,14 +45,13 @@ int	init_threads(t_program **sim)
 		(*sim)->ph[i].tid = i;
 		(*sim)->ph[i].last_meal = 0;
 		(*sim)->ph[i].next_meal = 0;
-		(*sim)->ph[i].will_die_at = 0;
+		//(*sim)->ph[i].will_die_at = 0;
 		(*sim)->ph[i].num_meals = 0;
-		(*sim)->ph[i].r_fork = r_fork_index(i, (*sim)->count);
-		(*sim)->ph[i].l_fork = l_fork_index(i, (*sim)->count);
+		(*sim)->ph[i].r_vork = r_vork_index(i, (*sim)->count);
+		(*sim)->ph[i].l_vork = l_vork_index(i, (*sim)->count);
 		i++;
 	}
 	return (1);
-	
 }
 
 int	init_sim(t_program **sim, int argc, char **argv)
@@ -63,23 +62,23 @@ int	init_sim(t_program **sim, int argc, char **argv)
 	(*sim)->count = ft_atoi(argv[1]);
 	if ((*sim)->count > 200)
 		return (-1);//GRT_THAN_200
-	(*sim)->ttdie = ft_atoi(argv[2]);
-	(*sim)->tteat = ft_atoi(argv[3]);
-	(*sim)->ttsleep = ft_atoi(argv[4]);
+	(*sim)->ttdie = (long)ft_atoi(argv[2]);
+	(*sim)->tteat = (long)ft_atoi(argv[3]);
+	(*sim)->ttsleep = (long)ft_atoi(argv[4]);
 	(*sim)->numeat = -1;
-	(*sim)->eatremain = -1;
+	//(*sim)->eatremain = -1;
 	if (argc == 6)
 	{
 		(*sim)->numeat = ft_atoi(argv[5]);
-		(*sim)->eatremain = (*sim)->count;//teminate if reached 0
+		//(*sim)->eatremain = (*sim)->count;//teminate if reached 0
 	}	
-	(*sim)->fork = init_fork((*sim)->count);
-	if ((*sim)->fork == NULL)
+	(*sim)->vork = init_vork((*sim)->count);
+	if ((*sim)->vork == NULL)
 		return (-1);
 	(*sim)->end = 0; //1 true, 0 not true, terminate if true
 	(*sim)->index = -1; //for pthread_create loop index to assign tid
 	//(*sim)->print_lock = NULL;
 	//(*sim)->dead_lock = NULL;
 	(*sim)->ph = NULL;
-	return (init_threads(sim));//return 1 success, -2 malloc fail indicate free forks
+	return (init_threads(sim));//return 1 success, -2 malloc fail indicate free vorks
 }

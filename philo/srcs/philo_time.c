@@ -10,29 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 long	get_time_ms()
 {
-	struct timeval currenttime;
-	long	millisecs;
-
-	gettimeofday(&currenttime, NULL);
-	millisecs = currenttime.tv_sec * 1000 \
-			+ currenttime.tv_usec / 1000;
-	return (millisecs);
-}
-
-void	*print_time(void *arg)
-{
-	int	tid;
 	struct	timeval currenttime;
+	long	millisecs;
 	
-	tid = *(int *)arg;
-	printf("Thread %d started.\n", tid);
-	gettimeofday(&currenttime, NULL);
-
-	printf("Current time in secs is %ld\n",currenttime.tv_sec);
-	printf("Current time in milliseconds %ld\n",get_time_ms());
-	return (NULL);
+	if (gettimeofday(&currenttime, NULL) == -1)
+		return (-1);// ERROR_HANDLE
+	millisecs = currenttime.tv_sec * 1000 + currenttime.tv_usec / 1000;
+	return (millisecs);
 }

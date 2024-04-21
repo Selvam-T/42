@@ -10,24 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-int	destroy_forks(pthread_mutex_t *fork, int count)
+int	destroy_vorks(pthread_mutex_t *vork, int count)
 {
 	int	i;
-printf("destroy forks mutex\n");
+
 	i = 0;
 	while (i < count)
 	{
-		printf("destroy %d\n",i);
-		if (fork[i] != NULL)
-			pthread_mutex_destroy(&fork[i]);
-		fork[i] == NULL;
+		printf("destroy mutex fork %d\n",i);
+		pthread_mutex_destroy(&vork[i]);
 		i++;
 	}
-	free (fork);
-	fork = NULL;
-printf("destroy fork mutex successful\n");
+	free (vork);
+	vork = NULL;
 	return (0);
 }
 
@@ -35,7 +32,7 @@ int	free_philo(t_program **sim)
 {
 	if (sim && (*sim))
 	{
-		destroy_forks((*sim)->fork, (*sim)->count);
+		destroy_vorks((*sim)->vork, (*sim)->count);
 		if ((*sim)->ph)
 			free((*sim)->ph);
 		(*sim)->ph = NULL;

@@ -10,29 +10,35 @@
 #                                                                              #
 # **************************************************************************** #
 
+NAME = 		philo
+
+SRCS_DIR = 	srcs/
+OBJS_DIR = 	objs/
+
+SOURCE = 	philo.c philo_free.c philo_utils.c \
+		philo_init.c philo_tests.c philo_time.c philo_fork.c\
+
+SRCS = 		$(addprefix $(SRCS_DIR), $(SOURCE))
+OBJS = 		$(addprefix $(OBJS_DIR), $(SOURCE:.c=.o))
+	
+HEADER = 	./philo.h
+
 CC = 		cc
 CFLAGS = 	-g -Wall -Werror -Wextra
 
-NAME = 		philo
-SOURCE = 	philo.c philo_free.c philo_utils.c philo_message.c \
-		philo_init.c philo_tests.c philo_time.c philo_fork.c\
-		reference/philo_threads.c \
-	
-OBJECT =	$(patsubst %.c, %.o, $(SOURCE))
-HEADER = 	./philo.h
-
 all: 		$(NAME)
-$(NAME):	$(OBJECT) $(HEADER)
-		$(CC) $(CFLAGS) $(OBJECT) -o $(NAME) 
+$(NAME):	$(OBJS) $(HEADER)
+		$(CC) $(CFLAGS) $(OBJS) -o $(NAME) 
 
-./%.o:		./%.c -l./
-		$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.c $(HEADER)
+		mkdir -p $(OBJS_DIR)
+		$(CC) $(FLAGS) -c $< -o $@
 	
 clean:
-		rm -f $(OBJECT)
+		rm -rf $(OBJS_DIR)
 
 fclean: 	clean
-		rm -f $(NAME)
+		rm -rf $(NAME)
 
 re:		fclean all
 

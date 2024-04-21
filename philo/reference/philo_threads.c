@@ -12,6 +12,59 @@
 
 #include "../philo.h"
 
+void	*threadfn1(void *arg)
+{
+	if (arg != NULL)
+		printf("arg is not NULL\n");
+	printf("Hello from the new thread 1!\n");
+	return (NULL);
+}
+
+void	*threadfn2(void *arg)
+{
+	if (arg != NULL)
+		printf("arg is not NULL\n");
+	printf("Hello from the detached thread 2!\n");
+	return (NULL);
+}
+
+void	*thread_function(void *arg) 
+{
+	int tid = *(int *)arg;
+	printf("Thread %d started.\n", tid);
+
+	// Perform some computation or task
+	for (int i = 0; i < 5; ++i) {
+	printf("Thread %d is running...\n", tid);
+	// Simulate some computation
+	for (int j = 0; j < 1000000; ++j) {}
+	}
+
+	printf("Thread %d finished.\n", tid);
+	return NULL;
+	//pthread_exit(NULL);
+}
+
+int	sample_thread_simulation(t_program *sim)
+{
+	int	i;
+	
+	printf("Main thread started.\n");
+	i = 0;
+	while (i < sim->count)
+	{
+		pthread_create(&sim->ph[i].td, NULL, thread_function, (void *)&sim->ph[i].tid);
+		i++;
+	}
+	i = 0;
+	while (i < sim->count)//n, 0, 1, 2...n clockwise
+	{
+		pthread_join(sim->ph[i].td, NULL);
+		i++;
+	}
+	printf("Main thread finished.\n");
+	return 0;
+}
 //create a new thread
 int	create_newthread()
 {

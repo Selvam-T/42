@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-int	r_fork_index(int i, int count)
+int	r_vork_index(int i, int count)
 {
 	int	j;
 	
@@ -22,7 +22,7 @@ int	r_fork_index(int i, int count)
 	return (j);
 }
 
-int	l_fork_index(int i, int count)
+int	l_vork_index(int i, int count)
 {
 	int	j;
 	
