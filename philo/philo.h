@@ -26,6 +26,7 @@ typedef struct s_mutex
 	pthread_mutex_t 	*vork;
 	pthread_mutex_t 	plock;
 	pthread_mutex_t 	dlock;
+	pthread_mutex_t 	alock;
 	int 				dead;
 	int 				actvph;	
 }	t_mutex;
@@ -52,6 +53,7 @@ typedef struct s_philo
 	pthread_mutex_t		l_vork;//represented by vork[i + 1]
 	pthread_mutex_t 	plock;//points to mutex to lock print
 	pthread_mutex_t 	dlock;//points to mutex to lock updating dead
+	pthread_mutex_t 	alock;//points to mutex to lock updating active threads
 	t_general			info;//general information
 }	t_philo;
 
@@ -61,6 +63,7 @@ int 	handle_error1(char *msg);
 void	*handle_error2(char *msg);
 int		destroy_vorks(pthread_mutex_t *vork, int count);
 void	free_all(t_philo *ph, t_mutex *mtx, int count);
+void	destroy_mutex(pthread_mutex_t *a, pthread_mutex_t *b, pthread_mutex_t *c);
 
 //philo_utils
 int		ft_atoi(const char *nptr);

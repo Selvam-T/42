@@ -27,6 +27,17 @@ int	destroy_vorks(pthread_mutex_t *vork, int count)
 	vork = NULL;
 	return (0);
 }
+
+void	destroy_mutex(pthread_mutex_t *a, pthread_mutex_t *b, pthread_mutex_t *c)
+{
+	if (a != NULL)
+		pthread_mutex_destroy(a);
+	if (b != NULL)
+		pthread_mutex_destroy(b);
+	if (c != NULL)
+		pthread_mutex_destroy(c);
+}
+
 /*
 int	free_philo(t_program **sim)
 {

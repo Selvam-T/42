@@ -39,7 +39,7 @@ void	eating(t_philo *ph)
 	//NUM_MEALS++
 	manage_num_meals(ph);
 	
-	//PRINT EATING
+	//PRINT EATING_->I lock print function in print_status()
 	print_status(ph->last_meal, ph, "is eating");
 	
 	usleep2(ph->info.tteat);

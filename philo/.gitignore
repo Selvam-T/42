@@ -4,3 +4,4 @@
 /reference
 *.exe
 *.out
+.gitignore

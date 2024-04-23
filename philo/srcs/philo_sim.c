@@ -20,7 +20,9 @@ void	*num_eat_detach(t_philo *ph)
 	{
 		printf("num meals [%d] >= num eat [%d]. Detach ph[%d]\n", \
 			ph->num_meals, ph->info.numeat, ph->tid);
-		*(ph->actvph) -= 1;
+		pthread_mutex_lock(&(ph->alock));
+			*(ph->actvph) -= 1;
+		pthread_mutex_unlock(&(ph->alock));
 		pthread_detach(ph->td);
 		return (NULL); //exit? ERROR HANDLE
 	}
@@ -40,6 +42,9 @@ void	*sim_routine(void *arg)
 
 	while (1)
 	{
+//i must check if ttdie is crossed
+//update dead flag, remember to LOCK, UNLOCK dlock
+
 		//IF NUMEALS >= NUM EAT ---> DETACH_THREAD, RETURN
 		printf("ph[%d] thread begins.\n", ph->tid);
 		if (ph->info.numeat != -1)
@@ -48,33 +53,22 @@ void	*sim_routine(void *arg)
 		//EATING
 		eating(ph);
 		
-		//SLEEPING
+		//SLEEPING-->I lock print function in print_status()
 		print_status(get_time_ms(), ph, "is sleeping");
 		usleep2(ph->info.ttsleep);
 
-		//THINKING
+		//THINKING-
 		timerm = ph->next_meal - get_time_ms();
 		print_status(get_time_ms(), ph, "is thinking");
 		usleep2(timerm);
 	}
 	return (NULL);
 }
-/*int	sim_monitor(t_philo *ph)
-{
-	(void)ph;
-	
-	if (ph->next_meal < get_time_ms()) //his ttdie exceeded
-	{
-		//lock mutex to dead
-		pthread_mutex_lock(&ph->dead_lock);
-			ph->dead = 1;
-		pthread_mutex_unlock(&ph->dead_lock);
-	}
-	//if (ph->dead = 1)
-		//END SIMULATION
-		//FREE EVERYTHING
 
-	return (0);
+/*
+void	sim_monitor(t_philo *ph)
+{
+	
 }*/
 
 int	sim_activity(t_philo *ph, t_mutex m, int count)
@@ -89,9 +83,10 @@ int	sim_activity(t_philo *ph, t_mutex m, int count)
 		i++;
 	}
 	
-	//	sim_monitor(sim);
+	//	sim_monitor
 	while (1)
 	{
+		
 		//KIV number of threads still active
 		if (m.actvph == 0)
 		{
@@ -100,6 +95,7 @@ int	sim_activity(t_philo *ph, t_mutex m, int count)
 		}
 		else
 			printf("%d THREADS still active\n",m.actvph);
+		
 		//KIV dead flag
 		if (m.dead == 1)
 		{
@@ -108,6 +104,7 @@ int	sim_activity(t_philo *ph, t_mutex m, int count)
 		}
 		else
 			printf("EVERYONE is alive\n");
+
 	}
 	
 	//join thread
@@ -121,3 +118,65 @@ int	sim_activity(t_philo *ph, t_mutex m, int count)
 	}
 	return(0);
 }
+
+
+/*
+int sim_activity(t_philo *ph, t_mutex m, int count) {
+    int i = 0;
+    // Create threads
+    while (i < count) {
+        printf("create thread for ph [%d]\n", ph[i].tid);
+        if (pthread_create(&(ph[i].td), NULL, sim_routine, (void *)&(ph[i])) != 0) {
+            // If pthread_create fails, return -1 immediately
+            return (-1);
+        }
+        i++;
+    }
+    
+    // Monitor threads
+    int all_detached = 0;
+    while (!all_detached) {
+        all_detached = 1;
+        int i = 0;
+        while (i < count) {
+            if (pthread_join(ph[i].td, NULL) != 0) {
+                // If pthread_join fails, return -1 immediately
+                return (-1);
+            }
+            if (ph[i].td != 0) {
+                // Thread is still active
+                all_detached = 0;
+                break;
+            }
+            i++;
+        }
+        if (all_detached) {
+            printf("ALL THREADS have detached \n");
+            break;
+        }
+
+        // Print status of threads
+        printf("%d THREADS still active\n", m.actvph);
+        
+        // Check the dead flag
+        if (m.dead == 1) {
+            printf("SOMEONE has died \n");
+            break;
+        } else {
+            printf("EVERYONE is alive\n");
+        }
+    }
+    
+    // Join threads
+    i = 0;
+    while (i < count) {
+        printf("join ph [%d]\n", i);
+        if (pthread_join(ph[i].td, NULL) != 0) {
+            // If pthread_join fails, return -1 immediately
+            return (-1);
+        }
+        i++;
+    }
+    
+    return 0;
+}*/
