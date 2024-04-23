@@ -23,7 +23,6 @@ pthread_mutex_t *init_vork(int count)
 	i = 0;
 	while (i < count)
 	{
-		//printf("init_vork[%d] mutex\n",i);//DELETE
 		if (pthread_mutex_init(&vork[i], NULL) != 0)
 			return (NULL);
 		i++;
@@ -31,54 +30,63 @@ pthread_mutex_t *init_vork(int count)
 	return (vork);
 }
 
-int	init_threads(t_program **sim)
+t_philo	*init_threads(t_general *info, t_mutex *mtx, int count)
 {
-	int	i;
-	
-	(*sim)->ph = (t_philo *)malloc(sizeof(t_philo) * (*sim)->count);
-	if ((*sim)->ph == NULL)
-		return (-1);
+	t_philo	*ph;
+	int		i;
+
+	ph = (t_philo *)malloc(sizeof(t_philo) * count);
+	if (ph == NULL)
+		return (handle_error2("Malloc failure"));
 	
 	i = 0;
-	while (i < (*sim)->count)
+	while (i < count)
 	{
-		(*sim)->ph[i].tid = i;
-		(*sim)->ph[i].last_meal = 0;
-		(*sim)->ph[i].next_meal = 0;
-		//(*sim)->ph[i].will_die_at = 0;
-		(*sim)->ph[i].num_meals = 0;
-		(*sim)->ph[i].r_vork = r_vork_index(i, (*sim)->count);
-		(*sim)->ph[i].l_vork = l_vork_index(i, (*sim)->count);
+		ph[i].tid = i;
+		ph[i].last_meal = 0;
+		ph[i].next_meal = 0;
+		ph[i].num_meals = 0;
+		
+		ph[i].dead = &(mtx->dead);
+		ph[i].actvph = &(mtx->actvph);
+		ph[i].r_vork = mtx->vork[r_vork_index(i, count)];
+		ph[i].l_vork = mtx->vork[l_vork_index(i, count)];
+		ph[i].plock = mtx->plock;
+		ph[i].dlock = mtx->dlock;
+		ph[i].info = *info;
+		
 		i++;
 	}
-	return (1);
+	return (ph);
 }
 
-int	init_sim(t_program **sim, int argc, char **argv)
+void 	init_general_info(t_general *info, int argc, char **argv)
 {
-	
-	if (is_positive_digit(argc, argv) == -1)
-		return (-1);//NEG_DIGIT_OR_NON_DIGIT
-	(*sim)->count = ft_atoi(argv[1]);
-	if ((*sim)->count > 200)
-		return (-1);//GRT_THAN_200
-	(*sim)->ttdie = (long)ft_atoi(argv[2]);
-	(*sim)->tteat = (long)ft_atoi(argv[3]);
-	(*sim)->ttsleep = (long)ft_atoi(argv[4]);
-	(*sim)->numeat = -1;
-	//(*sim)->eatremain = -1;
+	info->ttdie = (long)ft_atoi(argv[2]);
+	info->tteat = (long)ft_atoi(argv[3]);
+	info->ttsleep = (long)ft_atoi(argv[4]);
+	info->numeat = -1;
 	if (argc == 6)
-	{
-		(*sim)->numeat = ft_atoi(argv[5]);
-		//(*sim)->eatremain = (*sim)->count;//teminate if reached 0
-	}	
-	(*sim)->vork = init_vork((*sim)->count);
-	if ((*sim)->vork == NULL)
+		info->numeat = ft_atoi(argv[5]);
+}
+
+int 	init_mutex(t_mutex *mtx, int count)
+{
+	mtx->dead = 0;
+	mtx->actvph = count;
+	if (pthread_mutex_init(&mtx->plock, NULL) != 0)
 		return (-1);
-	(*sim)->end = 0; //1 true, 0 not true, terminate if true
-	(*sim)->index = -1; //for pthread_create loop index to assign tid
-	//(*sim)->print_lock = NULL;
-	//(*sim)->dead_lock = NULL;
-	(*sim)->ph = NULL;
-	return (init_threads(sim));//return 1 success, -2 malloc fail indicate free vorks
+	if (pthread_mutex_init(&mtx->dlock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&mtx->plock);
+		return (-1);
+	}
+	mtx->vork = init_vork(count);
+	if (mtx->vork == NULL)
+	{
+		pthread_mutex_destroy(&mtx->plock);
+		pthread_mutex_destroy(&mtx->dlock);
+		return (-1);
+	}
+	return (0);
 }

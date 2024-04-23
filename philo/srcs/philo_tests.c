@@ -12,33 +12,29 @@
 
 #include "../philo.h"
 
-void	test_print(t_program *sim)
+void	print_info(t_general info)
+{	
+	printf("No. of PH [%d]\n",info.count);
+	printf("time to die [%ld] milliseconds\n",info.ttdie);
+	printf("time to eat [%ld] milliseconds\n",info.tteat);
+	printf("time to sleep [%ld] milliseconds\n",info.ttsleep);
+	printf("each ph eats [%d] times\n",info.numeat);
+}
+
+void	print_ph(t_philo *ph, int count)
 {
 	int	i;
-	
-	printf("\nNumber of Ph: [%d]\n",sim->count);
-	printf("time to die [%ld] milliseconds\n",sim->ttdie);
-	printf("time to eat [%ld] milliseconds\n",sim->tteat);
-	printf("time to sleep [%ld] milliseconds\n",sim->ttsleep);
-	printf("each ph eats [%d] times\n",sim->numeat);
-	//printf("Terminate when total eat count [%d]\n",sim->eatremain);
 
-	printf("vork status before claim:\n");
-	printf("%s \n", sim->end ? "Someone died" : "No one died");
-	printf("index to assign tid [%d] before loop iteration\n",sim->index);
-
-
-	printf("print each thread:\n");
 	i = 0;
-	while (i < sim->count)
+	while (i < count)
 	{
-		printf("==================\n");
-		printf("thread id [%d]\n",sim->ph[i].tid);
-		printf("last meal eaten at [%ld]\n",sim->ph[i].last_meal);
-		printf("next meal eat at [%ld]\n",sim->ph[i].next_meal);
-		//printf("will die at [%d]\n",sim->ph[i].will_die_at);
-		printf("meals eaten [%d]\n",sim->ph[i].num_meals);
-		
+		printf("tid [%d]\n", ph[i].tid);
+		printf("last meal [%ld]\n", ph[i].last_meal);
+		printf("next meal [%ld]\n", ph[i].next_meal);
+		printf("ptr to dead [%d]\n", *(ph[i].dead));
+		printf("ptr to active threads [%d]\n", *(ph[i].actvph));
+		print_info(ph[i].info);
+		printf("****************************************\n");
 		i++;
 	}
 }

@@ -27,7 +27,7 @@ int	destroy_vorks(pthread_mutex_t *vork, int count)
 	vork = NULL;
 	return (0);
 }
-
+/*
 int	free_philo(t_program **sim)
 {
 	if (sim && (*sim))
@@ -40,10 +40,32 @@ int	free_philo(t_program **sim)
 		*sim = NULL;
 	}
 	return (-1);
+} */
+
+void	*free_ph(t_philo *ph)
+{
+
+	free (ph);
+	ph = NULL;
+	return (NULL);
 }
 
-void	handle_error() //used in philo_threads
+int	handle_error1(char *msg)
 {
-	printf("Error exit\n");
-	exit(EXIT_FAILURE);
+	printf("%s\n",msg);
+	return (-1);
+}
+
+void	*handle_error2(char *msg)
+{
+	printf("%s\n",msg);
+	return (NULL);
+}
+
+void	free_all(t_philo *ph, t_mutex *mtx, int count)
+{
+	free_ph(ph);
+	destroy_vorks(mtx->vork, count);
+	pthread_mutex_destroy(&mtx->plock);
+	pthread_mutex_destroy(&mtx->dlock);	
 }

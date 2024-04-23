@@ -16,7 +16,8 @@ SRCS_DIR = 	srcs/
 OBJS_DIR = 	objs/
 
 SOURCE = 	philo.c philo_free.c philo_utils.c \
-		philo_init.c philo_tests.c philo_time.c philo_fork.c\
+		philo_init.c philo_tests.c philo_time.c philo_fork.c \
+		philo_action.c philo_sim.c \
 
 SRCS = 		$(addprefix $(SRCS_DIR), $(SOURCE))
 OBJS = 		$(addprefix $(OBJS_DIR), $(SOURCE:.c=.o))
