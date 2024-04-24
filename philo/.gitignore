@@ -1,7 +1,0 @@
-/objs
-/older
-/t.sh
-/reference
-*.exe
-*.out
-.gitignore
