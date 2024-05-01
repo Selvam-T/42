@@ -12,27 +12,6 @@
 
 #include "../philo.h"
 
-void	usleep2(long time)
-{
-	int	x;
-	int	i;
-
-	x = time / 100;
-	i = 0;
-	while(i < x)
-	{
-		usleep(100 * 1000);
-		i++;
-	}
-}
-
-void	print_status(long time, t_philo *ph, char *msg)
-{
-	pthread_mutex_lock(&ph->plock);
-		printf("%ld ms ph[%d] %s\n", time, ph->tid, msg);
-	pthread_mutex_unlock(&ph->plock);
-}
-
 int	is_positive_digit(int argc, char **argv)
 {
 	int	i;

@@ -28,30 +28,17 @@ int	destroy_vorks(pthread_mutex_t *vork, int count)
 	return (0);
 }
 
-void	destroy_mutex(pthread_mutex_t *a, pthread_mutex_t *b, pthread_mutex_t *c)
+void	destroy_mutex(t_mutex *mtx, int flag)
 {
-	if (a != NULL)
-		pthread_mutex_destroy(a);
-	if (b != NULL)
-		pthread_mutex_destroy(b);
-	if (c != NULL)
-		pthread_mutex_destroy(c);
+	if (flag >= 1)
+		pthread_mutex_destroy(&(mtx->plock));
+	if (flag >= 2)
+		pthread_mutex_destroy(&(mtx->klock));
+	if (flag >= 3)
+		pthread_mutex_destroy(&(mtx->dlock));
+	if (flag == 4)
+		pthread_mutex_destroy(&(mtx->elock));
 }
-
-/*
-int	free_philo(t_program **sim)
-{
-	if (sim && (*sim))
-	{
-		destroy_vorks((*sim)->vork, (*sim)->count);
-		if ((*sim)->ph)
-			free((*sim)->ph);
-		(*sim)->ph = NULL;
-		free(*sim);
-		*sim = NULL;
-	}
-	return (-1);
-} */
 
 void	*free_ph(t_philo *ph)
 {
@@ -78,5 +65,7 @@ void	free_all(t_philo *ph, t_mutex *mtx, int count)
 	free_ph(ph);
 	destroy_vorks(mtx->vork, count);
 	pthread_mutex_destroy(&mtx->plock);
-	pthread_mutex_destroy(&mtx->dlock);	
+	pthread_mutex_destroy(&mtx->klock);
+	pthread_mutex_destroy(&mtx->dlock);
+	pthread_mutex_destroy(&mtx->elock);
 }

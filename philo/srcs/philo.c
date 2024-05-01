@@ -28,21 +28,25 @@ int 	validate_input(int argc, char **argv)
 
 int	main(int argc, char *argv[])
 {
-	int 		count;
 	t_philo		*ph;
-	t_general	info;
-	t_mutex		mtx;
+	t_general		info;
+	t_mutex			mtx;
+	t_flag			flag;
 
-	count = validate_input(argc, argv);
-	if (count == -1)
+	ph = NULL;
+	flag.kill = 0;
+	flag.count = validate_input(argc, argv);
+	if (flag.count == -1)
 		return (-1);
-	if (init_mutex(&mtx, count) == -1)
+	flag.active = flag.count;
+	if (init_mutex(&mtx, flag.count) == -1)
 		return (-1);
-	init_general_info(&info, argc, argv);
-	ph = init_threads(&info, &mtx, count);
+	init_general_info(&info, argc, argv, &flag);
+	ph = init_threads(&info, &mtx, flag.count);
 	if (ph == NULL)
 		return (handle_error1("Malloc failure"));
-	sim_activity(ph, mtx, count);
-	free_all(ph, &mtx, count);
+	sim_activity(ph, flag.count, &(info.tstart));
+	
+	free_all(ph, &mtx, flag.count);
 	return (0);
-}	
+}
