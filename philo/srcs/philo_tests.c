@@ -33,8 +33,6 @@ void	print_ph(t_philo *ph, int count)
 		printf("tid [%d]\n", ph[i].tid);
 		printf("last meal [%ld]\n", ph[i].last_meal);
 		printf("next meal [%ld]\n", ph[i].next_meal);
-		printf("eaten [%d] meals\n", ph[i].num_meals);
-		printf("dead flag [%d]\n", ph[i].dead);
 		printf("eaten count [%d]\n", ph[i].eaten);
 		print_info(ph[i].info);
 		printf("****************************************\n");
@@ -57,11 +55,7 @@ void	print_mutex_test(t_philo *ph, int count, t_mutex *mut)
 			printf("ph[%d] address is same as mut klock\n",i);
 		else
 			printf("ph[%d] address is different from mut klock\n",i);
-		if (ph[i].dlock == &(mut->dlock))
-			printf("ph[%d] address is same as mut dlock\n",i);
-		else
-			printf("ph[%d] address is different from mut dlock\n",i);
-		if (ph[i].elock == &(mut->elock))
+		if (ph[i].alock == &(mut->alock))
 			printf("ph[%d] address is same as mut elock\n",i);
 		else
 			printf("ph[%d] address is different from mut elock\n",i);
@@ -71,11 +65,4 @@ void	print_mutex_test(t_philo *ph, int count, t_mutex *mut)
 			printf("ph[%d] lfork address is different from mut vork[%d]\n",i,i+1);
 		i++;
 	}
-}
-
-void 	print_eat_updates(t_philo *ph)
-{
-
-	printf("ph[%d], next meal %ld ms, has eaten %d meals, dead flag is %d\n", \
-			ph->tid, ph->next_meal, ph->eaten, ph->dead);
 }

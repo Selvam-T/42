@@ -33,43 +33,41 @@ void	print_status(long time, t_philo *ph, char *msg)
 	pthread_mutex_unlock(ph->plock);
 }
 
-void	detachif_eaten(t_philo *ph)
-{
-	if (ph->info->numeat != -1 && ph->eaten >= ph->info->numeat)
-	{
-		//printf("num meals [%d] >= num eat [%d]. Detach ph[%d]\n", \
-		//	ph->num_meals, ph->info->numeat, ph->tid);//DELETE
-		pthread_detach(ph->td);
-	}
-}
-
-int 	breakif_dead(t_philo *ph)
+int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
 {
 	long	curtime;
 
-	curtime = get_time_ms() - ph->info->tstart;// -1 ERROR HANDLE
+	curtime = get_time_ms() - ph->info->tstart;
+	if (curtime < 0)
+		return (-1);
 	if  (ph->next_meal < curtime)
 	{
-		pthread_mutex_lock(ph->dlock);
-		ph->dead = 1;
-		pthread_mutex_unlock(ph->dlock);
-
-		printf("ph[%d] next meal %ld < cur time %ld, dead flag is set to 1\n"\
-			,ph->tid, ph->next_meal, curtime);//DELETE
+		pthread_mutex_lock(ph->klock);
+		*(ph->info->kill) = 1;
+		pthread_mutex_unlock(ph->klock);
 		return (1);
 	}
-	printf("ph[%d] next meal is later, so not dead\n",ph->dead);//DELETE
 	return (0);
 }
 
-void 	detachif_lesstime(t_philo *ph, int actv_time)
+int 	breakif_lesstime(t_philo *ph, int actv_time)// return -1 error, 1 break, 0 no action
 {
-	//actv_time = tteat or ttsleep
-	if (get_time_ms() + actv_time < ph->next_meal)// -1 ERROR HANDLE
+	long	curtime;
+
+	curtime = get_time_ms() - ph->info->tstart;
+	if (curtime == -1)
+		return (-1);//error in c lib time function
+	
+	//where 'actv_time' is tteat or ttsleep depending on eating() or sleeping()
+	if (curtime + actv_time < ph->next_meal)
 		usleep(actv_time);
 	else
 	{
-		usleep(ph->next_meal - get_time_ms());
-		pthread_detach(ph->td);
+		usleep(ph->next_meal - curtime);
+		pthread_mutex_lock(ph->klock);
+		*(ph->info->kill) = 1;
+		pthread_mutex_unlock(ph->klock);
+		return (1);
 	}
+	return (0);
 }

@@ -12,7 +12,7 @@
 
 #include "../philo.h"
 
-int 	validate_input(int argc, char **argv)
+int 	validate_input(int argc, char **argv)// return -1 error, or value
 {
 	int 	count;
 
@@ -31,22 +31,22 @@ int	main(int argc, char *argv[])
 	t_philo		*ph;
 	t_general		info;
 	t_mutex			mtx;
-	t_flag			flag;
+	t_sim			sim;
 
 	ph = NULL;
-	flag.kill = 0;
-	flag.count = validate_input(argc, argv);
-	if (flag.count == -1)
+	sim.kill = 0;
+	sim.count = validate_input(argc, argv);
+	if (sim.count == -1)
 		return (-1);
-	flag.active = flag.count;
-	if (init_mutex(&mtx, flag.count) == -1)
+	sim.active = sim.count;
+	if (init_mutex(&mtx, sim.count) == -1)
 		return (-1);
-	init_general_info(&info, argc, argv, &flag);
-	ph = init_threads(&info, &mtx, flag.count);
+	init_general_info(&info, argc, argv, &sim);
+	ph = init_threads(&info, &mtx, sim.count);
 	if (ph == NULL)
 		return (handle_error1("Malloc failure"));
-	sim_activity(ph, flag.count, &(info.tstart));
-	
-	free_all(ph, &mtx, flag.count);
+	if (sim_activity(ph, &sim, &(info.tstart)) == -1)
+		return (handle_error1("Process failure"));
+	free_all(ph, &mtx, sim.count);
 	return (0);
 }

@@ -12,7 +12,7 @@
 
 #include "../philo.h"
 
-pthread_mutex_t *init_vorks(int count)
+pthread_mutex_t *init_vorks(int count)// return NULL error 
 {
 	pthread_mutex_t 	*vorks;
 	int	i;
@@ -30,7 +30,7 @@ pthread_mutex_t *init_vorks(int count)
 	return (vorks);
 }
 
-t_philo	*init_threads(t_general *info, t_mutex *mtx, int count)
+t_philo	*init_threads(t_general *info, t_mutex *mtx, int count) // return NULL error
 {
 	t_philo	*ph;
 	int		i;
@@ -44,24 +44,21 @@ t_philo	*init_threads(t_general *info, t_mutex *mtx, int count)
 		ph[i].tid = i;
 		ph[i].last_meal = 0;
 		ph[i].next_meal = info->ttdie;
-		ph[i].num_meals = 0;
-		ph[i].dead = 0;
 		ph[i].eaten = 0;
 		ph[i].r_vork = &mtx->vork[r_vork_index(i, count)];
 		ph[i].l_vork = &mtx->vork[l_vork_index(i, count)];
 		ph[i].plock = &mtx->plock;
 		ph[i].klock = &mtx->klock;
-		ph[i].dlock = &mtx->dlock;
-		ph[i].elock = &mtx->elock;
+		ph[i].alock = &mtx->alock;
 		ph[i].info = info;
 		i++;
 	}
 	return (ph);
 }
 	
-void 	init_general_info(t_general *info, int argc, char **argv, t_flag *fl)
+void 	init_general_info(t_general *info, int argc, char **argv, t_sim *sim)
 {
-	info->count = fl->count;
+	info->count = sim->count;
 	info->tstart = 0;
 	info->ttdie = (long)ft_atoi(argv[2]);
 	info->tteat = (long)ft_atoi(argv[3]);
@@ -69,11 +66,11 @@ void 	init_general_info(t_general *info, int argc, char **argv, t_flag *fl)
 	info->numeat = -1;
 	if (argc == 6)
 		info->numeat = ft_atoi(argv[5]);
-	info->kill = &(fl->kill);//addr of kill initialized separately
-	info->active = &(fl->active);//addr of active initialized separately
+	info->kill = &(sim->kill);//addr of kill initialized separately
+	info->active = &(sim->active);//addr of active initialized separately
 }
 
-int 	init_mutex(t_mutex *mtx, int count)
+int 	init_mutex(t_mutex *mtx, int count)// return -1 error, 0 no action
 {
 	if (pthread_mutex_init(&mtx->plock, NULL) != 0)
 		return (-1);
@@ -82,23 +79,17 @@ int 	init_mutex(t_mutex *mtx, int count)
 		destroy_mutex(mtx,1);
 		return (-1);
 	}
-	
-	if (pthread_mutex_init(&mtx->dlock, NULL) != 0)
+
+	if (pthread_mutex_init(&mtx->alock, NULL) != 0)
 	{
 		destroy_mutex(mtx,2);
-		return (-1);
-	}
-
-	if (pthread_mutex_init(&mtx->elock, NULL) != 0)
-	{
-		destroy_mutex(mtx,3);
 		return (-1);
 	}
 	
 	mtx->vork = init_vorks(count);
 	if (mtx->vork == NULL)
 	{
-		destroy_mutex(mtx,4);
+		destroy_mutex(mtx,3);
 		return (-1);
 	}
 	return (0);
