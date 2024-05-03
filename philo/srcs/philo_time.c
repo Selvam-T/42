@@ -12,6 +12,20 @@
 
 #include "../philo.h"
 
+void	usleep2(long time)
+{
+	int	x;
+	int	i;
+
+	x = time / 100;
+	i = 0;
+	while(i < x)
+	{
+		usleep(1000);
+		i++;
+	}
+}
+
 long	get_time_ms()
 {
 	struct	timeval currenttime;
@@ -21,4 +35,14 @@ long	get_time_ms()
 		return (-1);// ERROR_HANDLE
 	millisecs = currenttime.tv_sec * 1000 + currenttime.tv_usec / 1000;
 	return (millisecs);
+}
+
+long	time_now(long tstart)
+{
+	long	timenow;
+	
+	timenow = get_time_ms() - tstart;
+	if (timenow == -1)
+		return (-1);
+	return (timenow);
 }

@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_sim_utils.c                                  :+:      :+:    :+:   */
+/*   philo_action_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 17:15:41 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/04/24 17:15:56 by sthiagar         ###   ########.fr       */
+/*   Created: 2024/05/03 16:29:03 by sthiagar          #+#    #+#             */
+/*   Updated: 2024/05/03 16:29:17 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-void	usleep2(long time)
-{
-	int	x;
-	int	i;
-
-	x = time / 100;
-	i = 0;
-	while(i < x)
-	{
-		usleep(1000);
-		i++;
-	}
-}
 
 void	print_status(long time, t_philo *ph, char *msg)
 {
 	pthread_mutex_lock(ph->plock);
 		printf("%ld ms ph[%d] %s\n", time, ph->tid + 1, msg);
 	pthread_mutex_unlock(ph->plock);
+}
+
+void	update_simflags(t_philo *ph)
+{
+	pthread_mutex_lock(ph->klock);
+	*(ph->info->kill) = 1;
+	*(ph->info->whodied) = ph->tid;
+	pthread_mutex_unlock(ph->klock);
 }
 
 int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
@@ -42,32 +36,33 @@ int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
 		return (-1);
 	if  (ph->next_meal < curtime)
 	{
-		pthread_mutex_lock(ph->klock);
-		*(ph->info->kill) = 1;
-		pthread_mutex_unlock(ph->klock);
+		update_simflags(ph);
 		return (1);
 	}
 	return (0);
 }
 
-int 	breakif_lesstime(t_philo *ph, int actv_time)// return -1 error, 1 break, 0 no action
+int 	breakif_lesstime(t_philo *ph, long ttact, char *msg)
 {
-	long	curtime;
+	long	time_now;
+	long	tsleep;
+	int		ret;
 
-	curtime = get_time_ms() - ph->info->tstart;
-	if (curtime == -1)
-		return (-1);//error in c lib time function
-	
-	//where 'actv_time' is tteat or ttsleep depending on eating() or sleeping()
-	if (curtime + actv_time < ph->next_meal)
-		usleep(actv_time);
-	else
+	time_now = get_time_ms() - ph->info->tstart;
+	if (time_now == -1)
+		return (-1);
+
+	tsleep = ttact; //tteat or ttsleep
+	ret = 0;
+	if (time_now + ttact > ph->next_meal)
 	{
-		usleep(ph->next_meal - curtime);
-		pthread_mutex_lock(ph->klock);
-		*(ph->info->kill) = 1;
-		pthread_mutex_unlock(ph->klock);
-		return (1);
+		tsleep = ph->next_meal - time_now;
+		update_simflags(ph);
+		ret = 1;
 	}
-	return (0);
+	if (msg[4] == 'e')
+		ph->next_meal = time_now + ph->info->tteat;//only for eating
+	print_status(time_now, ph, msg);
+	usleep(tsleep);
+	return (ret);
 }

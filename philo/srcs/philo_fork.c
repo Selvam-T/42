@@ -12,7 +12,8 @@
 
 #include "../philo.h"
 
-int	r_vork_index(int i, int count)
+//int	r_vork_index(int i, int count)
+int	vork1_index(int i, int count)
 {
 	int	j;
 	
@@ -22,7 +23,8 @@ int	r_vork_index(int i, int count)
 	return (j);
 }
 
-int	l_vork_index(int i, int count)
+//int	l_vork_index(int i, int count)
+int	vork2_index(int i, int count)
 {
 	int	j;
 	
@@ -30,5 +32,28 @@ int	l_vork_index(int i, int count)
 	if (i > j)
 		return (i);
 	return (j);
+}
+
+int	vork_index(int i, int count, char fork)
+{
+	int	odd;
+
+	odd = 1;
+	if (count % 2 == 0)
+		odd = 0;
+	if (fork == 'r')//right fork
+	{
+		if (odd)
+			return (vork1_index(i, count));
+		else
+			return (vork2_index(i, count));
+	}
+	else //left fork
+	{
+		if (odd)
+			return (vork2_index(i, count));
+		else
+			return (vork1_index(i, count));
+	}
 }
 

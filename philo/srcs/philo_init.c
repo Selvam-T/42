@@ -42,11 +42,10 @@ t_philo	*init_threads(t_general *info, t_mutex *mtx, int count) // return NULL e
 	while (i < count)
 	{
 		ph[i].tid = i;
-		ph[i].last_meal = 0;
 		ph[i].next_meal = info->ttdie;
 		ph[i].eaten = 0;
-		ph[i].r_vork = &mtx->vork[r_vork_index(i, count)];
-		ph[i].l_vork = &mtx->vork[l_vork_index(i, count)];
+		ph[i].r_vork = &mtx->vork[vork_index(i, count, 'r')];
+		ph[i].l_vork = &mtx->vork[vork_index(i, count, 'l')];
 		ph[i].plock = &mtx->plock;
 		ph[i].klock = &mtx->klock;
 		ph[i].alock = &mtx->alock;
@@ -66,8 +65,9 @@ void 	init_general_info(t_general *info, int argc, char **argv, t_sim *sim)
 	info->numeat = -1;
 	if (argc == 6)
 		info->numeat = ft_atoi(argv[5]);
-	info->kill = &(sim->kill);//addr of kill initialized separately
-	info->active = &(sim->active);//addr of active initialized separately
+	info->kill = &(sim->kill);
+	info->active = &(sim->active);
+	info->whodied = &(sim->whodied);
 }
 
 int 	init_mutex(t_mutex *mtx, int count)// return -1 error, 0 no action

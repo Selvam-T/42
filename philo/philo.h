@@ -25,7 +25,8 @@ typedef struct s_sim
 {
 	int 	count;
 	int 	kill;
-	int 	active;//init to count, decremented by ph[i] 
+	int 	active;//init to count, decremented by ph[i]
+	int 	whodied;
 }	t_sim;
 
 typedef struct s_mutex
@@ -47,13 +48,13 @@ typedef struct s_general
 	int		numeat;//max meals each ph eat
 	int 	*kill;//each ph[i] can access kill
 	int		*active;//each ph[i] can decrement active, when eaten >= numeat
+	int 	*whodied;
 }	t_general;
 
 typedef struct s_philo
 {
 	pthread_t			td; //thread
 	int					tid;//thread id associated with thread
-	long				last_meal;//after eat, current time
 	long				next_meal;//if cur_time > next meal, then dead = 1
 	int 				eaten;//meal counter
 	pthread_mutex_t		*r_vork;//represented by vork[i]
@@ -77,16 +78,20 @@ int		ft_atoi(const char *nptr);
 int		is_positive_digit(int argc, char **argv);
 
 //philo_fork
-int	r_vork_index(int i, int count);
-int	l_vork_index(int i, int count);
+int	vork1_index(int i, int count);
+int	vork2_index(int i, int count);
+int	vork_index(int i, int count, char fork);
 
 //philo_tests
 void	print_info(t_general *info);
 void	print_ph(t_philo *ph, int count);
 void	print_mutex_test(t_philo *ph, int count, t_mutex *mut);
+void	print_fork_allocation(t_philo *ph, int count);
 
 //philo_time
+void	usleep2(long time);
 long	get_time_ms();
+long	time_now(long tstart);
 
 //philo_init
 t_philo			*init_threads(t_general *info, t_mutex *mtx, int count);
@@ -97,15 +102,15 @@ int 			init_mutex(t_mutex *mtx, int count);
 //philo_sim
 int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
 
-//philo_sim_utils
+//philo_action_utils
 void	print_status(long time, t_philo *ph, char *msg);
-void	usleep2(long time);
+void	update_simflags(t_philo *ph);
 int 	breakif_dead(t_philo *ph);
-int 	breakif_lesstime(t_philo *ph, int actv_time);
+int 	breakif_lesstime(t_philo *ph, long ttact, char *msg);
 
 //philo_action
-int		eating(t_philo *ph);
-int		sleeping(t_philo *ph);
-int 	thinking(t_philo *ph);
+int		philo_eats(t_philo *ph);
+int		philo_sleeps(t_philo *ph);
+int 	philo_thinks(t_philo *ph);
 
 #endif

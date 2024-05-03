@@ -31,11 +31,28 @@ void	print_ph(t_philo *ph, int count)
 	while (i < count)
 	{
 		printf("tid [%d]\n", ph[i].tid);
-		printf("last meal [%ld]\n", ph[i].last_meal);
+		//printf("last meal [%ld]\n", ph[i].cur_meal);
 		printf("next meal [%ld]\n", ph[i].next_meal);
 		printf("eaten count [%d]\n", ph[i].eaten);
 		print_info(ph[i].info);
 		printf("****************************************\n");
+		i++;
+	}
+}
+
+void	print_fork_allocation(t_philo *ph, int count)
+{
+	int	i;
+
+	if (count%2 == 0)
+		printf("We have Even number of ph\n");
+	else
+		printf("We have Odd number of ph\n");
+	i = 0;
+	while (i < count)
+	{
+		printf("ph[%d] right fork is %d\n",ph[i].tid, vork_index(i, count, 'r'));
+		printf("ph[%d] left fork is %d\n",ph[i].tid, vork_index(i, count, 'l'));
 		i++;
 	}
 }
