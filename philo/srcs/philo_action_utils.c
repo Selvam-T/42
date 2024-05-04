@@ -21,10 +21,10 @@ void	print_status(long time, t_philo *ph, char *msg)
 
 void	update_simflags(t_philo *ph)
 {
-	pthread_mutex_lock(ph->klock);
-	*(ph->info->kill) = 1;
+	pthread_mutex_lock(ph->dlock);
 	*(ph->info->whodied) = ph->tid;
-	pthread_mutex_unlock(ph->klock);
+	*(ph->info->tdied) = ph->next_meal;
+	pthread_mutex_unlock(ph->dlock);
 }
 
 int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
@@ -62,6 +62,7 @@ int 	breakif_lesstime(t_philo *ph, long ttact, char *msg)
 	}
 	if (msg[4] == 'e')
 		ph->next_meal = time_now + ph->info->tteat;//only for eating
+	//if kill flag is 1, return (1); don't print
 	print_status(time_now, ph, msg);
 	usleep(tsleep);
 	return (ret);

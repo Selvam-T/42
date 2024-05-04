@@ -19,22 +19,14 @@ void	*sim_routine(void *arg)
 	ph = (t_philo *)arg;
 	while (1)
 	{
-		pthread_mutex_lock(ph->klock);
-		if (*(ph->info->kill) == 1)//set to 1 by monitor
-		{
-			pthread_mutex_unlock(ph->klock);
+		if (philo_isdead(ph) == 1)
 			break;
-		}
-		pthread_mutex_unlock(ph->klock);
-		
 		// eat 
 		if (philo_eats(ph) == 1) //if -1 then terminate program ***
 			break;
-
 		// sleep
 		if (philo_sleeps(ph) == 1) //if -1 then terminate program + does not have return 1 to break
 			break;
-
 		// think
 		if (philo_thinks(ph)== 1) //if -1 then terminate program + does not have return 1 to break
 			break;	
@@ -42,14 +34,15 @@ void	*sim_routine(void *arg)
 	return (NULL);
 }
 
-void	sim_monitor(t_philo *ph, t_sim	*sim)
+/*
+void	sim_monitor(t_philo *ph, t_sim *sim) //possible DELETE
 {
 	int 	i;
 
 	i = 0;
 	while (i < sim->count)
 	{
-		pthread_mutex_lock(ph->klock);
+		pthread_mutex_lock(ph->dlock);
 		if (sim->kill == 1)
 		{
 			if (*(ph->info->whodied) != -1)
@@ -58,18 +51,15 @@ void	sim_monitor(t_philo *ph, t_sim	*sim)
 				printf("%ld ms [%d] died\n",get_time_ms() - ph->info->tstart, *(ph->info->whodied));
 				pthread_mutex_unlock(ph->plock);
 			}
-			pthread_mutex_unlock(ph->klock);
+			pthread_mutex_unlock(ph->dlock);
 			break;
 		}
-		pthread_mutex_unlock(ph->klock);
+		pthread_mutex_unlock(ph->dlock);
 
 		pthread_mutex_lock(ph->alock);
 		if (sim->active == 0)
 		{
 			pthread_mutex_unlock(ph->alock);
-			pthread_mutex_lock(ph->klock);
-			sim->kill = 1;
-			pthread_mutex_unlock(ph->klock);
 			break;
 		}
 		pthread_mutex_unlock(ph->alock);
@@ -78,7 +68,7 @@ void	sim_monitor(t_philo *ph, t_sim	*sim)
 			i = 0;
 	}
 
-}
+}*/
 
 int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no action
 {
@@ -97,10 +87,12 @@ int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no 
 		i++;
 	}
 	
-	sim_monitor(ph, sim);
+	//sim_monitor(ph, sim);
 	
 	if (*(ph->info->whodied) == -1) //DELETE for testing only
 		printf("Simulation ended, all eaten.\n"); //DELETE for testing only
+	else
+		printf("%ld ms ph[%d] is dead",sim->tdied, sim->whodied);
 
 	//PH threads join
 	i = 0;

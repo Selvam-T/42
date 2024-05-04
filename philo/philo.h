@@ -24,17 +24,17 @@
 typedef struct s_sim
 {
 	int 	count;
-	int 	kill;
-	int 	active;//init to count, decremented by ph[i]
+	int 	active;
 	int 	whodied;
+	long	tdied;
 }	t_sim;
 
 typedef struct s_mutex
 {
 	pthread_mutex_t 	*vork;
 	pthread_mutex_t 	plock;
-	pthread_mutex_t 	klock;
-	pthread_mutex_t 	alock;//lock active
+	pthread_mutex_t 	dlock;
+	pthread_mutex_t 	alock;
 
 }	t_mutex;
 
@@ -42,26 +42,26 @@ typedef struct s_general
 {
 	int		count;
 	long	tstart;
-	long	ttdie;//length of time before death
-	long	tteat;//length of time to eat
-	long	ttsleep;//length of time to sleep
-	int		numeat;//max meals each ph eat
-	int 	*kill;//each ph[i] can access kill
-	int		*active;//each ph[i] can decrement active, when eaten >= numeat
+	long	ttdie;
+	long	tteat;
+	long	ttsleep;
+	int		numeat;
+	int		*active;
 	int 	*whodied;
+	long	*tdied;
 }	t_general;
 
 typedef struct s_philo
 {
-	pthread_t			td; //thread
-	int					tid;//thread id associated with thread
-	long				next_meal;//if cur_time > next meal, then dead = 1
-	int 				eaten;//meal counter
-	pthread_mutex_t		*r_vork;//represented by vork[i]
-	pthread_mutex_t		*l_vork;//represented by vork[i + 1]
-	pthread_mutex_t 	*plock;//Lock shared printf()
-	pthread_mutex_t 	*klock;//lock when updating KILL
-	pthread_mutex_t		*alock;//lock when updating ACTIIVE
+	pthread_t			td;
+	int					tid;
+	long				next_meal;
+	int 				eaten;
+	pthread_mutex_t		*r_vork;
+	pthread_mutex_t		*l_vork;
+	pthread_mutex_t 	*plock;
+	pthread_mutex_t 	*dlock;
+	pthread_mutex_t		*alock;
 	t_general			*info;
 }	t_philo;
 
@@ -101,6 +101,9 @@ int 			init_mutex(t_mutex *mtx, int count);
 
 //philo_sim
 int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
+
+//philo_sim_utils
+int	philo_isdead(t_philo *ph);
 
 //philo_action_utils
 void	print_status(long time, t_philo *ph, char *msg);

@@ -37,6 +37,7 @@ int 	takefork(t_philo *ph, char *msg)
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
+	//if kill flag is 1, return (1); don't print
 	print_status(time_now, ph, msg);
 	return (0);
 }
@@ -48,13 +49,13 @@ int		philo_eats(t_philo *ph)//return -1 error, 1 break, 0 no action
 
 	//LOCK right fork
 	pthread_mutex_lock(ph->r_vork);
-	if (takefork(ph, "has taken a R fork") == -1)
-		return (-1);
+	if (takefork(ph, "has taken a R fork") == -1) // or == 1
+		return (-1); // return (1);
 
 	//LOCK left fork	
 	pthread_mutex_lock(ph->l_vork);
-	if (takefork(ph, "has taken a L fork") == -1)
-		return (-1);
+	if (takefork(ph, "has taken a L fork") == -1) // or == 1
+		return (-1); // return (1);
 	
 	if (breakif_lesstime(ph, ph->info->tteat, "is eating") == 1)
 		return (1);//signal to break from thread
@@ -76,7 +77,6 @@ int		philo_sleeps(t_philo *ph) //return -1 error, 0 no action
 {
 	if (breakif_dead(ph) == 1) //if -1 then terminate program ***
 		return (1);
-
 	return (breakif_lesstime(ph, ph->info->ttsleep, "is sleeping"));
 }
 
@@ -93,6 +93,7 @@ int 	philo_thinks(t_philo *ph) //return -1 error, 0 no action
 	time_rem = ph->next_meal - time_now;
 	if (time_rem > 0)
 	{
+		//if kill flag is 1, return (1); don't print
 		print_status(time_now, ph, "is thinking");
 		usleep2(time_rem);
 	}

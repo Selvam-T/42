@@ -32,7 +32,7 @@ void	destroy_mutex(t_mutex *mtx, int flag)
 	if (flag >= 1)
 		pthread_mutex_destroy(&(mtx->plock));
 	if (flag >= 2)
-		pthread_mutex_destroy(&(mtx->klock));
+		pthread_mutex_destroy(&(mtx->dlock));
 	if (flag == 3)
 		pthread_mutex_destroy(&(mtx->alock));
 }
@@ -62,6 +62,6 @@ void	free_all(t_philo *ph, t_mutex *mtx, int count)
 	free_ph(ph);
 	destroy_vorks(mtx->vork, count);
 	pthread_mutex_destroy(&mtx->plock);
-	pthread_mutex_destroy(&mtx->klock);
+	pthread_mutex_destroy(&mtx->dlock);
 	pthread_mutex_destroy(&mtx->alock);
 }

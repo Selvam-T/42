@@ -19,8 +19,9 @@ void	print_info(t_general *info)
 	printf("time to eat [%ld] milliseconds\n",info->tteat);
 	printf("time to sleep [%ld] milliseconds\n",info->ttsleep);
 	printf("each ph eats [%d] times\n",info->numeat);
-	printf("kill value [%d]\n",*(info->kill));
-	printf("active value [%d]\n",*(info->active));
+	printf("ph[%d] died\n",*(info->whodied));
+	printf("time of death [%ld]\n",*(info->tdied));
+	printf("number of active ph [%d]\n",*(info->active));
 }
 
 void	print_ph(t_philo *ph, int count)
@@ -44,10 +45,10 @@ void	print_fork_allocation(t_philo *ph, int count)
 {
 	int	i;
 
-	if (count%2 == 0)
-		printf("We have Even number of ph\n");
+	if (count % 2 == 0)
+		printf("We have Even number of ph \n");
 	else
-		printf("We have Odd number of ph\n");
+		printf("We have Odd number of ph \n");
 	i = 0;
 	while (i < count)
 	{
@@ -68,10 +69,10 @@ void	print_mutex_test(t_philo *ph, int count, t_mutex *mut)
 			printf("ph[%d] address is same as mut plock\n",i);
 		else
 			printf("ph[%d] address is different from mut plock\n",i);
-		if (ph[i].klock == &(mut->klock))
-			printf("ph[%d] address is same as mut klock\n",i);
+		if (ph[i].dlock == &(mut->dlock))
+			printf("ph[%d] address is same as mut dlock\n",i);
 		else
-			printf("ph[%d] address is different from mut klock\n",i);
+			printf("ph[%d] address is different from mut dlock\n",i);
 		if (ph[i].alock == &(mut->alock))
 			printf("ph[%d] address is same as mut elock\n",i);
 		else

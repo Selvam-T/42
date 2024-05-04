@@ -34,9 +34,9 @@ int	main(int argc, char *argv[])
 	t_sim			sim;
 
 	ph = NULL;
-	sim.kill = 0;
 	sim.count = validate_input(argc, argv);
 	sim.whodied = -1;
+	sim.tdied = 0;
 	if (sim.count == -1)
 		return (-1);
 	sim.active = sim.count;
@@ -46,7 +46,6 @@ int	main(int argc, char *argv[])
 	ph = init_threads(&info, &mtx, sim.count);
 	if (ph == NULL)
 		return (handle_error1("Malloc failure"));
-	//print_fork_allocation(ph, sim.count); getchar(); //DELETE
 	if (sim_activity(ph, &sim, &(info.tstart)) == -1)
 		return (handle_error1("Process failure"));
 	free_all(ph, &mtx, sim.count);

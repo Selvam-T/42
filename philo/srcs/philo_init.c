@@ -47,7 +47,7 @@ t_philo	*init_threads(t_general *info, t_mutex *mtx, int count) // return NULL e
 		ph[i].r_vork = &mtx->vork[vork_index(i, count, 'r')];
 		ph[i].l_vork = &mtx->vork[vork_index(i, count, 'l')];
 		ph[i].plock = &mtx->plock;
-		ph[i].klock = &mtx->klock;
+		ph[i].dlock = &mtx->dlock;
 		ph[i].alock = &mtx->alock;
 		ph[i].info = info;
 		i++;
@@ -65,16 +65,16 @@ void 	init_general_info(t_general *info, int argc, char **argv, t_sim *sim)
 	info->numeat = -1;
 	if (argc == 6)
 		info->numeat = ft_atoi(argv[5]);
-	info->kill = &(sim->kill);
 	info->active = &(sim->active);
 	info->whodied = &(sim->whodied);
+	info->tdied = &(sim->tdied);
 }
 
 int 	init_mutex(t_mutex *mtx, int count)// return -1 error, 0 no action
 {
 	if (pthread_mutex_init(&mtx->plock, NULL) != 0)
 		return (-1);
-	if (pthread_mutex_init(&mtx->klock, NULL) != 0)
+	if (pthread_mutex_init(&mtx->dlock, NULL) != 0)
 	{
 		destroy_mutex(mtx,1);
 		return (-1);
