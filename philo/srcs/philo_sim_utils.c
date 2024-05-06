@@ -12,15 +12,26 @@
 
 #include "../philo.h"
 
-int philo_isdead(t_philo *ph) //return 0 no action, 1 break
+int someone_died(t_philo *ph) //return 0 no action, 1 break
 {
 	pthread_mutex_lock(ph->dlock);
-	//if (*(ph->info->kill) == 1)//set to 1 by monitor
-	if (*(ph->info->whodied) >= 1)
+	if (*(ph->info->whodied) >= 0)
 	{
 		pthread_mutex_unlock(ph->dlock);
 		return (1);
 	}
 	pthread_mutex_unlock(ph->dlock);
+	return (0);
+}
+
+int no_philo_active(t_philo *ph) //return 0 no action, 1 break
+{
+	pthread_mutex_lock(ph->alock);
+	if (*(ph->info->active) == 0)
+	{
+		pthread_mutex_unlock(ph->alock);
+		return (1);
+	}
+	pthread_mutex_unlock(ph->alock);
 	return (0);
 }

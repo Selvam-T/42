@@ -57,8 +57,8 @@ typedef struct s_philo
 	int					tid;
 	long				next_meal;
 	int 				eaten;
-	pthread_mutex_t		*r_vork;
-	pthread_mutex_t		*l_vork;
+	pthread_mutex_t		*vork1;
+	pthread_mutex_t		*vork2;
 	pthread_mutex_t 	*plock;
 	pthread_mutex_t 	*dlock;
 	pthread_mutex_t		*alock;
@@ -103,13 +103,14 @@ int 			init_mutex(t_mutex *mtx, int count);
 int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
 
 //philo_sim_utils
-int	philo_isdead(t_philo *ph);
+int	someone_died(t_philo *ph);
+int no_philo_active(t_philo *ph);
 
 //philo_action_utils
 void	print_status(long time, t_philo *ph, char *msg);
-void	update_simflags(t_philo *ph);
-int 	breakif_dead(t_philo *ph);
-int 	breakif_lesstime(t_philo *ph, long ttact, char *msg);
+void	update_simflags(t_philo *ph, long tdied);
+int 	is_philo_dead(t_philo *ph);
+int 	less_time_to_eat(t_philo *ph, long ttact, char *msg);
 
 //philo_action
 int		philo_eats(t_philo *ph);

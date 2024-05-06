@@ -77,7 +77,7 @@ void	print_mutex_test(t_philo *ph, int count, t_mutex *mut)
 			printf("ph[%d] address is same as mut elock\n",i);
 		else
 			printf("ph[%d] address is different from mut elock\n",i);
-		if (ph[i].l_vork == &(mut->vork[i + 1]))
+		if (ph[i].vork2 == &(mut->vork[i + 1]))
 			printf("ph[%d] lfork address is same as mut vork[%d]\n",i,i + 1);
 		else
 			printf("ph[%d] lfork address is different from mut vork[%d]\n",i,i+1);

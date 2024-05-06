@@ -17,9 +17,11 @@ void	*sim_routine(void *arg)
 	t_philo		*ph;
 	
 	ph = (t_philo *)arg;
+	if (ph->next_meal == -1)
+		ph->next_meal = get_time_ms() - ph->info->tstart + ph->info->ttdie;
 	while (1)
 	{
-		if (philo_isdead(ph) == 1)
+		if (someone_died(ph) == 1)
 			break;
 		// eat 
 		if (philo_eats(ph) == 1) //if -1 then terminate program ***
@@ -34,41 +36,35 @@ void	*sim_routine(void *arg)
 	return (NULL);
 }
 
-/*
+
 void	sim_monitor(t_philo *ph, t_sim *sim) //possible DELETE
 {
-	int 	i;
+	(void)sim;//DELETE if not used
 
-	i = 0;
-	while (i < sim->count)
+	while (1)
 	{
-		pthread_mutex_lock(ph->dlock);
-		if (sim->kill == 1)
-		{
-			if (*(ph->info->whodied) != -1)
-			{
-				pthread_mutex_lock(ph->plock);
-				printf("%ld ms [%d] died\n",get_time_ms() - ph->info->tstart, *(ph->info->whodied));
-				pthread_mutex_unlock(ph->plock);
-			}
-			pthread_mutex_unlock(ph->dlock);
-			break;
-		}
-		pthread_mutex_unlock(ph->dlock);
 
-		pthread_mutex_lock(ph->alock);
-		if (sim->active == 0)
-		{
-			pthread_mutex_unlock(ph->alock);
+		if (someone_died(ph) == 1) //return 0 no action, 1 break
 			break;
-		}
-		pthread_mutex_unlock(ph->alock);
-		i++;
-		if (i == sim->count)
-			i = 0;
+		if (no_philo_active(ph) == 1) //return 0 no action, 1 break
+			break;
 	}
+}
 
-}*/
+int 	handle_one_philo(t_philo *ph)
+{
+	long	time_now;
+	long	tsleep;
+
+	time_now = get_time_ms() - ph->info->tstart;
+	if (time_now == -1)
+		return (-1);
+	printf("%ld ms ph[%d] has taken fork 1\n", time_now, ph->tid + 1);
+	tsleep = time_now + ph->info->ttdie;
+	usleep(tsleep);
+	printf("%ld ms ph[%d] died\n", tsleep, ph->tid + 1);
+	return (0);
+}
 
 int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no action
 {
@@ -77,8 +73,10 @@ int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no 
 	*tstart = get_time_ms();
 	if (*tstart == -1)
 		return (-1);
-	
-	//PH threads create
+
+	if (sim->count == 1)
+		return (handle_one_philo(ph));//return (0) or -1 if error
+
 	i = 0;
 	while (i < sim->count)
 	{
@@ -86,13 +84,14 @@ int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no 
 			return (-1);
 		i++;
 	}
+
+	sim_monitor(ph, sim);
 	
-	//sim_monitor(ph, sim);
-	
+	//I am not dlocking whodied, because outside sim_monitor threads are extinct
 	if (*(ph->info->whodied) == -1) //DELETE for testing only
 		printf("Simulation ended, all eaten.\n"); //DELETE for testing only
 	else
-		printf("%ld ms ph[%d] is dead",sim->tdied, sim->whodied);
+		printf("%ld ms ph[%d] died.\n",sim->tdied, sim->whodied);
 
 	//PH threads join
 	i = 0;
@@ -102,6 +101,5 @@ int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no 
 			return (-1);
 		i++;
 	}
-
 	return(0);
 }

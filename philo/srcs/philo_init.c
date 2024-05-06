@@ -42,10 +42,10 @@ t_philo	*init_threads(t_general *info, t_mutex *mtx, int count) // return NULL e
 	while (i < count)
 	{
 		ph[i].tid = i;
-		ph[i].next_meal = info->ttdie;
+		ph[i].next_meal = -1;
 		ph[i].eaten = 0;
-		ph[i].r_vork = &mtx->vork[vork_index(i, count, 'r')];
-		ph[i].l_vork = &mtx->vork[vork_index(i, count, 'l')];
+		ph[i].vork1= &mtx->vork[vork_index(i, count, 'r')];
+		ph[i].vork2= &mtx->vork[vork_index(i, count, 'l')];
 		ph[i].plock = &mtx->plock;
 		ph[i].dlock = &mtx->dlock;
 		ph[i].alock = &mtx->alock;

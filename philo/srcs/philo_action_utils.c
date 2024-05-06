@@ -19,15 +19,15 @@ void	print_status(long time, t_philo *ph, char *msg)
 	pthread_mutex_unlock(ph->plock);
 }
 
-void	update_simflags(t_philo *ph)
+void	update_simflags(t_philo *ph, long tdied)
 {
 	pthread_mutex_lock(ph->dlock);
 	*(ph->info->whodied) = ph->tid;
-	*(ph->info->tdied) = ph->next_meal;
+	*(ph->info->tdied) = tdied;
 	pthread_mutex_unlock(ph->dlock);
 }
 
-int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
+int 	is_philo_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
 {
 	long	curtime;
 
@@ -36,13 +36,13 @@ int 	breakif_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
 		return (-1);
 	if  (ph->next_meal < curtime)
 	{
-		update_simflags(ph);
+		update_simflags(ph, ph->next_meal);
 		return (1);
 	}
 	return (0);
 }
 
-int 	breakif_lesstime(t_philo *ph, long ttact, char *msg)
+int 	less_time_to_eat(t_philo *ph, long ttact, char *msg)
 {
 	long	time_now;
 	long	tsleep;
@@ -57,13 +57,15 @@ int 	breakif_lesstime(t_philo *ph, long ttact, char *msg)
 	if (time_now + ttact > ph->next_meal)
 	{
 		tsleep = ph->next_meal - time_now;
-		update_simflags(ph);
+		update_simflags(ph, time_now + tsleep);
 		ret = 1;
 	}
 	if (msg[4] == 'e')
 		ph->next_meal = time_now + ph->info->tteat;//only for eating
-	//if kill flag is 1, return (1); don't print
-	print_status(time_now, ph, msg);
+
+	if (someone_died(ph) == 1) //return 0 no action, 1 break
+		return (1);
+	print_status(time_now + tsleep, ph, msg);
 	usleep(tsleep);
 	return (ret);
 }

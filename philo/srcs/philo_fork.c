@@ -12,7 +12,6 @@
 
 #include "../philo.h"
 
-//int	r_vork_index(int i, int count)
 int	vork1_index(int i, int count)
 {
 	int	j;
@@ -23,7 +22,6 @@ int	vork1_index(int i, int count)
 	return (j);
 }
 
-//int	l_vork_index(int i, int count)
 int	vork2_index(int i, int count)
 {
 	int	j;
@@ -57,3 +55,5 @@ int	vork_index(int i, int count, char fork)
 	}
 }
 
+//ph[i].vork1 = &mtx->vork[vork_index(i, count, 'r')];
+//ph[i].vork2 = &mtx->vork[vork_index(i, count, 'l')];
