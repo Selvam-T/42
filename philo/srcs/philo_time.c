@@ -21,7 +21,7 @@ void	usleep2(long time)
 	i = 0;
 	while(i < x)
 	{
-		usleep(1000);
+		usleep(1000 * 100);
 		i++;
 	}
 }

@@ -54,6 +54,3 @@ int	vork_index(int i, int count, char fork)
 			return (vork1_index(i, count));
 	}
 }
-
-//ph[i].vork1 = &mtx->vork[vork_index(i, count, 'r')];
-//ph[i].vork2 = &mtx->vork[vork_index(i, count, 'l')];

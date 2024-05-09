@@ -22,104 +22,84 @@ int 	update_num_meals(t_philo *ph)//return 1 break, 0 no action
 			pthread_mutex_lock(ph->alock);
 			*(ph->info->active) -= 1;
 			pthread_mutex_unlock(ph->alock);
-			pthread_mutex_unlock(ph->vork1);
-			pthread_mutex_unlock(ph->vork2);
-			return (1); //signal to break from thread
+			return (1);
 		}
 	}
 	return (0);
 }
 
-int 	takefork(t_philo *ph, char *msg)
+int 	takefork(t_philo *ph, char *msg) //return -1 error, 1 break, 0 no action
 {
 	long	time_now;
+	
+	//I could check if this ph is dead before he picks his forks
 	
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
-	if (someone_died(ph) == 1) //return 0 no action, 1 break
-		return (1);
-	print_status(time_now, ph, msg);
-	return (0);
+	return (print_ifalive(time_now, ph, msg, 0));// no usleep
 }
 
 int		philo_eats(t_philo *ph)//return -1 error, 1 break, 0 no action
 {
-	if (is_philo_dead(ph) == 1) //if -1 then terminate program ***
-		return (1);
+	int	flag;
 
-	//LOCK right fork
+	flag = is_philo_dead(ph);
+	if (flag == 1 || flag == -1)
+		return (flag);
+
 	pthread_mutex_lock(ph->vork1);
-	if (takefork(ph, "has taken fork 1") == -1) // or == 1
+	flag = takefork(ph, "has taken fork 1");
+	if (flag == 1 || flag == -1)
 	{
 		pthread_mutex_unlock(ph->vork1);
-		return (-1); // return (1);
+		return (flag);
 	}
-	//LOCK left fork	
+	pthread_mutex_unlock(ph->vork1);
+	
 	pthread_mutex_lock(ph->vork2);
-	if (takefork(ph, "has taken fork 2") == -1) // or == 1
+	flag = takefork(ph, "has taken fork 2");
+	if (flag == 1 || flag == -1)
 	{
 		pthread_mutex_unlock(ph->vork2);
-		return (-1); // return (1);
+		return (flag);
 	}
-	
-	if (less_time_to_eat(ph, ph->info->tteat, "is eating") == 1)
-		return (1);//signal to break from thread
-
-	//NUM_MEALS++
-	if (update_num_meals(ph) == 1)
-		return (1);//signal to break from thread
-
-	//UNLOCK right and left forks
-	pthread_mutex_unlock(ph->vork1);
 	pthread_mutex_unlock(ph->vork2);
+
+	if (handle_task(ph, ph->info->tteat, "is eating") == 1)
+	//if (handle_task2(ph, ph->info->tteat, "is eating", 'e') == 1)
+		return (1);
+
+	flag = update_num_meals(ph);
+	if (flag == 1 || flag == -1)
+		return (flag);
+
 	return (0);
 }
 
 int		philo_sleeps(t_philo *ph) //return -1 error, 0 no action
 {
-	if (is_philo_dead(ph) == 1) //if -1 then terminate program ***
-		return (1);
-	return (less_time_to_eat(ph, ph->info->ttsleep, "is sleeping"));
+	int	flag;
+
+	flag = is_philo_dead(ph);
+	if (flag == 1 || flag == -1)
+		return (flag);
+	return (handle_task(ph, ph->info->tteat, "is sleeping"));
+	//return (handle_task2(ph, ph->info->ttsleep, "is sleeping", 's'));
 }
 
-/*
-int 	philo_thinks(t_philo *ph) //return -1 error, 0 no action
-{
-	
-	long	time_rem;
-	long	time_now;
-
-	if (is_philo_dead(ph) == 1) //if -1 then terminate program
-		return (1);
-	time_now = get_time_ms() - ph->info->tstart;
-	if (time_now == -1)
-		return (-1);
-	time_rem = ph->next_meal - time_now;
-	if (time_rem > 0)
-	{
-		//remember to dlock whodied
-		if (*(ph->info->whodied) >= 0)//if someone died, return (1); don't print
-		return (1);
-		print_status(time_now, ph, "is thinking");
-		usleep2(time_rem);
-	}
-	print_status(time_now, ph, "is thinking");
-	return (0);
-}*/
-
 int 	philo_thinks(t_philo *ph) //return -1 error, 0 no action
 {
 	long	time_now;
+	int 	flag;
 
-	if (is_philo_dead(ph) == 1) //if -1 then terminate program
-		return (1);
+	flag = is_philo_dead(ph);
+	if (flag == 1 || flag == -1)
+		return (flag);
+
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
-	
-	if (someone_died(ph) == 1) //return 0 no action, 1 break
-		return (1);
-	print_status(time_now, ph, "is thinking");
-	return (0);
+	return (print_ifalive(time_now, ph, "is thinking", 1));// usleep 1 ms
+	//return (handle_task2(ph, 1, "is thinking", 't'));
 }

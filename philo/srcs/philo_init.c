@@ -94,3 +94,13 @@ int 	init_mutex(t_mutex *mtx, int count)// return -1 error, 0 no action
 	}
 	return (0);
 }
+
+int 	init_sim(t_sim *sim, t_mutex *mtx)
+{
+	sim->whodied = -1;
+	sim->tdied = 0;
+	sim->active = sim->count;
+	sim->alock = &mtx->alock;
+	sim->dlock = &mtx->dlock;
+	return (0);
+}

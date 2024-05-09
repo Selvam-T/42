@@ -26,8 +26,8 @@ OBJS = 		$(addprefix $(OBJS_DIR), $(SOURCE:.c=.o))
 HEADER = 	./philo.h
 
 CC = 		cc
-#CFLAGS = 	-g -Wall -Werror -Wextra -fsanitize=thread
-CFLAGS = 	-g -Wall -Werror -Wextra
+CFLAGS = 	-g -Wall -Werror -Wextra -fsanitize=thread
+#CFLAGS = 	-g -Wall -Werror -Wextra
 
 all: 		$(NAME)
 $(NAME):	$(OBJS) $(HEADER)

@@ -12,35 +12,21 @@
 
 #include "../philo.h"
 
-int 	validate_input(int argc, char **argv)// return -1 error, or value
-{
-	int 	count;
-
-	if (argc < 5 || argc > 6)
-		return (handle_error1("Error: Incorrect No. of arguments"));
-	if (is_positive_digit(argc, argv) == -1)
-			return (handle_error1("Error: not a valid digit"));
-	count = ft_atoi(argv[1]);
-	if (count == 0 || count > 200)
-		return (handle_error1("Error: Invalid No. of Philosophers"));
-	return (count);
-}
-
 int	main(int argc, char *argv[])
 {
-	t_philo		*ph;
+
+	t_sim			sim;
 	t_general		info;
 	t_mutex			mtx;
-	t_sim			sim;
+	t_philo		*ph;
 
 	ph = NULL;
-	sim.count = validate_input(argc, argv);
-	sim.whodied = -1;
-	sim.tdied = 0;
+	sim.count = validated_count(argc, argv);
 	if (sim.count == -1)
 		return (-1);
-	sim.active = sim.count;
 	if (init_mutex(&mtx, sim.count) == -1)
+		return (-1);
+	if (init_sim(&sim, &mtx) == -1)
 		return (-1);
 	init_general_info(&info, argc, argv, &sim);
 	ph = init_threads(&info, &mtx, sim.count);

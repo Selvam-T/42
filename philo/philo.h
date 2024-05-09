@@ -27,6 +27,8 @@ typedef struct s_sim
 	int 	active;
 	int 	whodied;
 	long	tdied;
+	pthread_mutex_t 	*dlock;
+	pthread_mutex_t		*alock;
 }	t_sim;
 
 typedef struct s_mutex
@@ -76,6 +78,7 @@ void	destroy_mutex(t_mutex *mtx, int flag);
 //philo_utils
 int		ft_atoi(const char *nptr);
 int		is_positive_digit(int argc, char **argv);
+int 	validated_count(int argc, char **argv);
 
 //philo_fork
 int	vork1_index(int i, int count);
@@ -87,6 +90,8 @@ void	print_info(t_general *info);
 void	print_ph(t_philo *ph, int count);
 void	print_mutex_test(t_philo *ph, int count, t_mutex *mut);
 void	print_fork_allocation(t_philo *ph, int count);
+void	print_mutex_addr(t_philo *ph, int count, t_mutex *mut);
+void	print_sim(t_sim sim);
 
 //philo_time
 void	usleep2(long time);
@@ -98,19 +103,22 @@ t_philo			*init_threads(t_general *info, t_mutex *mtx, int count);
 pthread_mutex_t *init_vorks(int count);
 void 			init_general_info(t_general *info, int argc, char **argv, t_sim *fl);
 int 			init_mutex(t_mutex *mtx, int count);
+int 			init_sim(t_sim *sim, t_mutex *mtx);
 
 //philo_sim
 int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
 
 //philo_sim_utils
 int	someone_died(t_philo *ph);
-int no_philo_active(t_philo *ph);
+//int no_philo_active(t_philo *ph);
 
 //philo_action_utils
-void	print_status(long time, t_philo *ph, char *msg);
+//void	print_status(long time, t_philo *ph, char *msg);
+int		print_ifalive(long time, t_philo *ph, char *msg, long tsleep);
 void	update_simflags(t_philo *ph, long tdied);
 int 	is_philo_dead(t_philo *ph);
-int 	less_time_to_eat(t_philo *ph, long ttact, char *msg);
+int 	handle_task(t_philo *ph, long ttact, char *msg);
+int 	handle_task2(t_philo *ph, long ttact, char *msg, int flag);
 
 //philo_action
 int		philo_eats(t_philo *ph);

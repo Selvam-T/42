@@ -54,3 +54,17 @@ int	ft_atoi(const char *nptr)
 	}
 	return (res * sign);
 }
+
+int 	validated_count(int argc, char **argv) // return -1 error, or value
+{
+	int 	count;
+
+	if (argc < 5 || argc > 6)
+		return (handle_error1("Error: Incorrect No. of arguments"));
+	if (is_positive_digit(argc, argv) == -1)
+			return (handle_error1("Error: not a valid digit"));
+	count = ft_atoi(argv[1]);
+	if (count == 0 || count > 200)
+		return (handle_error1("Error: Invalid No. of Philosophers"));
+	return (count);
+}
