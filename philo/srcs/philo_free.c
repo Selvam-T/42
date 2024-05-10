@@ -41,13 +41,13 @@ void	destroy_mutex(t_mutex *mtx, int flag)
 
 int	handle_error1(char *msg)
 {
-	printf("%s\n",msg);
-	return(-1);
+	printf("%s\n", msg);
+	return (-1);
 }
 
 void	*handle_error2(char *msg)
 {
-	printf("%s\n",msg);
+	printf("%s\n", msg);
 	return (NULL);
 }
 

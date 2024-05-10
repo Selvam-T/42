@@ -6,7 +6,7 @@
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:10:54 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/04/14 15:10:56 by sthiagar         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:25:56 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 pthread_mutex_t	*init_vorks(int count)
 {
-	int			i;
-	pthread_mutex_t	*vorks;
+	pthread_mutex_t		*vorks;
+	int					i;
 
 	vorks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * count);
 	if (vorks == NULL)

@@ -12,59 +12,7 @@
 
 #include "../philo.h"
 
-void	*sim_routine(void *arg)
-{
-	t_philo		*ph;
-	
-	ph = (t_philo *)arg;
-	if (ph->info->count % 2 == 0)//odd
-		usleep(1);
-	while (1)
-	{
-		if (someone_died(ph) == 1)
-			break;
-		if (philo_eats(ph) == 1) //if -1 then terminate program ***
-			break;
-		if (philo_sleeps(ph) == 1) //if -1 then terminate program + does not have return 1 to break
-			break;
-		if (philo_thinks(ph)== 1) //if -1 then terminate program + does not have return 1 to break
-			break;	
-	}
-	return (NULL);
-}
-
-void	sim_monitor(t_philo *ph, t_sim *sim) 
-{
-	int 	i;
-
-	i = 0;
-	while (i < sim->count)
-	{
-		pthread_mutex_lock(sim->alock);
-		if (sim->active == 0)
-		{
-			pthread_mutex_unlock(sim->alock);
-			break;
-		}
-		pthread_mutex_unlock(sim->alock);
-
-		if (is_philo_dead(&ph[i]) == 1)
-		{
-			pthread_mutex_lock(ph->nlock);
-			update_simflags(ph, ph->next_meal);
-			pthread_mutex_unlock(ph->nlock);
-			break;
-		}
-		if (i == sim->count)
-			i = 0;
-	}
-	pthread_mutex_lock(sim->dlock);
-	if (sim->whodied >= 0)
-		printf("%ld ms ph[%d] died.\n",sim->tdied, sim->whodied + 1);
-	pthread_mutex_unlock(sim->dlock);	
-}
-
-int 	handle_one_philo(t_philo *ph)
+int	handle_one_philo(t_philo *ph)
 {
 	long	time_now;
 	long	tsleep;
@@ -79,29 +27,81 @@ int 	handle_one_philo(t_philo *ph)
 	return (0);
 }
 
-int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no action
+void	*sim_routine(void *arg)
 {
-	int 		i;
+	t_philo		*ph;
 
-	*tstart = get_time_ms();
-	if (*tstart == -1)
-		return (-1);
+	ph = (t_philo *)arg;
+	if (ph->info->count % 2 == 0)
+		usleep(1);
+	while (1)
+	{
+		if (someone_died(ph) == 1)
+			break ;
+		if (philo_eats(ph) == 1)
+			break ;
+		if (philo_sleeps(ph) == 1)
+			break ;
+		if (philo_thinks(ph) == 1)
+			break ;
+	}
+	return (NULL);
+}
 
-	if (sim->count == 1)
-		return (handle_one_philo(ph));
+void	sim_monitor(t_philo *ph, t_sim *sim)
+{
+	int	i;
 
 	i = 0;
 	while (i < sim->count)
 	{
+		pthread_mutex_lock(sim->alock);
+		if (sim->active == 0)
+		{
+			pthread_mutex_unlock(sim->alock);
+			break ;
+		}
+		pthread_mutex_unlock(sim->alock);
+		if (is_philo_dead(&ph[i]) == 1)
+		{
+			pthread_mutex_lock(ph->nlock);
+			update_simflags(ph, ph->next_meal);
+			pthread_mutex_unlock(ph->nlock);
+			break ;
+		}
+		if (i == sim->count)
+			i = 0;
+	}
+}
+
+void	sim_activity(t_philo *ph, t_sim *sim)
+{
+	sim_monitor(ph, sim);
+	pthread_mutex_lock(sim->dlock);
+	if (sim->whodied >= 0)
+		printf("%ld ms ph[%d] died.\n", sim->tdied, sim->whodied + 1);
+	pthread_mutex_unlock(sim->dlock);
+}
+
+int	run_simulation(t_philo *ph, t_sim *sim, long *tstart)
+{
+	int	i;
+
+	*tstart = get_time_ms();
+	if (*tstart == -1)
+		return (-1);
+	if (sim->count == 1)
+		return (handle_one_philo(ph));
+	i = 0;
+	while (i < sim->count)
+	{
 		ph[i].next_meal = get_time_ms() - *tstart + ph[i].info->ttdie;
-		if (pthread_create(&(ph[i].td), NULL, sim_routine, (void *)&(ph[i])) != 0)
+		if (pthread_create(&(ph[i].td), NULL, sim_routine, \
+			(void *)&(ph[i])) != 0)
 			return (-1);
 		i++;
 	}
-
-	sim_monitor(ph, sim);
-
-	//PH threads join
+	sim_activity(ph, sim);
 	i = 0;
 	while (i < sim->count)
 	{
@@ -109,5 +109,5 @@ int	sim_activity(t_philo *ph, t_sim *sim, long *tstart)// return -1 error, 0 no 
 			return (-1);
 		i++;
 	}
-	return(0);
+	return (0);
 }

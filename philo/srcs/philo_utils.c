@@ -48,3 +48,15 @@ int	is_philo_dead(t_philo *ph)
 	pthread_mutex_unlock(ph->nlock);
 	return (0);
 }
+
+int	someone_died(t_philo *ph)
+{
+	pthread_mutex_lock(ph->dlock);
+	if (*(ph->info->whodied) >= 0)
+	{
+		pthread_mutex_unlock(ph->dlock);
+		return (1);
+	}
+	pthread_mutex_unlock(ph->dlock);
+	return (0);
+}

@@ -16,72 +16,18 @@ int	philo_eats(t_philo *ph)
 {
 	int	flag;
 
-	//fork 1 block: flag = collect_fork1(ph); if (flag != 0) return (flag);
-	/*if (someone_died(ph) == 1)
-		return (1);
-	pthread_mutex_lock(ph->vork1);
-	flag = takefork(ph, "has taken fork 1");
-	if (flag == 1 || flag == -1)
-	{
-		pthread_mutex_unlock(ph->vork1);
-		return (flag);
-	}*/
 	flag = collect_fork1(ph);
 	if (flag != 0)
 		return (flag);
-	//fork 2 block: flag = collect_fork2(ph); if (flag != 0) return (flag);
-	/*if (someone_died(ph) == 1)
-	{
-		pthread_mutex_unlock(ph->vork1);
-		return (1);
-	}
-	pthread_mutex_lock(ph->vork2);
-	flag = takefork(ph, "has taken fork 2");
-	if (flag == 1 || flag == -1)
-	{
-		pthread_mutex_unlock(ph->vork2);
-		pthread_mutex_unlock(ph->vork1);
-		return (flag);
-	}*/
 	flag = collect_fork2(ph);
 	if (flag != 0)
 		return (flag);
-	//eat block: flag = collect_food(ph); if (flag != 0) return (flag);
-	/*if (someone_died(ph) == 1)
-	{
-		pthread_mutex_unlock(ph->vork2);
-		pthread_mutex_unlock(ph->vork1);
-		return (1);
-	}
-	flag = eating(ph);
-	if (flag == 1 || flag == -1)
-	{
-		pthread_mutex_unlock(ph->vork2);
-		pthread_mutex_unlock(ph->vork1);
-		return (flag);
-	}*/
 	flag = collect_food(ph);
 	if (flag != 0)
 		return (flag);
-	//update meals block: flag = drop_fork_tally_meal(ph); if (flag != 0) return (flag);
-	/*if (someone_died(ph) == 1)
-	{
-		pthread_mutex_unlock(ph->vork2);
-		pthread_mutex_unlock(ph->vork1);
-		return (1);
-	}
-	if (update_num_meals(ph) == 1)
-	{
-		pthread_mutex_unlock(ph->vork2);
-		pthread_mutex_unlock(ph->vork1);
-		return (1);
-	}
-	pthread_mutex_unlock(ph->vork2);
-	pthread_mutex_unlock(ph->vork1);*/
-	flag = drop_fork_tally_meal(ph); 
+	flag = drop_fork_tally_meal(ph);
 	if (flag != 0)
 		return (flag);
-	//end
 	return (0);
 }
 
