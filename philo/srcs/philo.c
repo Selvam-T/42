@@ -14,10 +14,9 @@
 
 int	main(int argc, char *argv[])
 {
-
-	t_sim			sim;
-	t_general		info;
-	t_mutex			mtx;
+	t_sim		sim;
+	t_mutex		mtx;
+	t_general	info;
 	t_philo		*ph;
 
 	ph = NULL;
@@ -29,7 +28,7 @@ int	main(int argc, char *argv[])
 	if (init_sim(&sim, &mtx) == -1)
 		return (-1);
 	init_general_info(&info, argc, argv, &sim);
-	ph = init_threads(&info, &mtx, sim.count);
+	ph = init_philos(&info, &mtx, sim.count);
 	if (ph == NULL)
 		return (handle_error1("Malloc failure"));
 	if (sim_activity(ph, &sim, &(info.tstart)) == -1)

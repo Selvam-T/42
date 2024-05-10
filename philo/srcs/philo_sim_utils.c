@@ -23,16 +23,3 @@ int someone_died(t_philo *ph) //return 0 no action, 1 break
 	pthread_mutex_unlock(ph->dlock);
 	return (0);
 }
-
-/*
-int no_philo_active(t_philo *ph) //return 0 no action, 1 break
-{
-	pthread_mutex_lock(ph->alock);
-	if (*(ph->info->active) == 0)
-	{
-		pthread_mutex_unlock(ph->alock);
-		return (1);
-	}
-	pthread_mutex_unlock(ph->alock);
-	return (0);
-}*/

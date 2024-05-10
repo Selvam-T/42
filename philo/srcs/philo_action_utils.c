@@ -12,52 +12,40 @@
 
 #include "../philo.h"
 
-int		print_ifalive(long time, t_philo *ph, char *msg, long tsleep)
+int	update_num_meals(t_philo *ph)
 {
-
-	if (someone_died(ph) == 1) //return 0 no action, 1 break
-		return (1);
-	pthread_mutex_lock(ph->plock);
-		printf("%ld ms ph[%d] %s [will die at %ld] [eaten %d]\n", \
-			time, ph->tid + 1, msg, ph->next_meal, ph->eaten);
-	pthread_mutex_unlock(ph->plock);
-	usleep2(tsleep);
-	return (0);
-}
-
-void	update_simflags(t_philo *ph, long tdied)
-{
-	pthread_mutex_lock(ph->dlock);
-	*(ph->info->whodied) = ph->tid;
-	*(ph->info->tdied) = tdied;
-	pthread_mutex_unlock(ph->dlock);
-}
-
-int 	is_philo_dead(t_philo *ph) // return -1 error, 1 break, 0 no action
-{
-	long	time_now;
-
-	time_now = get_time_ms() - ph->info->tstart;
-	if (time_now == -1)
-		return (-1);
-	pthread_mutex_lock(ph->nlock);
-	if  (ph->next_meal < time_now)
+	if (ph->info->numeat != -1)
 	{
-		pthread_mutex_unlock(ph->nlock); //LOCK WITHIN LOCK POSSIBLE TROUBLE
-		return (1);
+		ph->eaten += 1;
+		if (ph->eaten >= ph->info->numeat)
+		{
+			pthread_mutex_lock(ph->alock);
+			*(ph->info->active) -= 1;
+			pthread_mutex_unlock(ph->alock);
+			return (1);
+		}
 	}
-	pthread_mutex_unlock(ph->nlock);
 	return (0);
 }
 
-int 	eating(t_philo *ph)
+int	takefork(t_philo *ph, char *msg)
 {
 	long	time_now;
 
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
-	if (time_now > ph->next_meal)//DO I NEED THIS?
+	return (print_ifalive(time_now, ph, msg, 0));
+}
+
+int	eating(t_philo *ph)
+{
+	long	time_now;
+
+	time_now = get_time_ms() - ph->info->tstart;
+	if (time_now == -1)
+		return (-1);
+	if (time_now > ph->next_meal)
 		return (1);
 	pthread_mutex_lock(ph->nlock);
 	ph->next_meal = time_now + ph->info->ttdie;
@@ -65,10 +53,10 @@ int 	eating(t_philo *ph)
 	return (print_ifalive(time_now, ph, "is eating", ph->info->tteat));
 }
 
-int 	sleeping(t_philo *ph)
+int	sleeping(t_philo *ph)
 {
+	int		ret;
 	long	time_now;
-	int 	ret;
 
 	ret = 0;
 	time_now = get_time_ms() - ph->info->tstart;
@@ -76,8 +64,9 @@ int 	sleeping(t_philo *ph)
 		return (-1);
 	if (time_now + ph->info->ttsleep > ph->next_meal)
 	{
-		ret = print_ifalive(time_now, ph, "is sleeping", ph->next_meal - time_now);
-		update_simflags(ph, ph->next_meal);//FUTURE TIME
+		ret = print_ifalive(time_now, ph, "is sleeping", \
+			ph->next_meal - time_now);
+		update_simflags(ph, ph->next_meal);
 		return (ret);
 	}
 	return (print_ifalive(time_now, ph, "is sleeping", ph->info->ttsleep));

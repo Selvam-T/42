@@ -5,66 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/16 17:44:45 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/04/16 17:44:49 by sthiagar         ###   ########.fr       */
+/*   Created: 2024/05/10 14:06:31 by sthiagar          #+#    #+#             */
+/*   Updated: 2024/05/10 14:07:32 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-int	is_positive_digit(int argc, char **argv)
+int	print_ifalive(long time, t_philo *ph, char *msg, long tsleep)
 {
-	int	i;
-	int	j;
-
-	i = 1;
-	while (i < argc)
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (-1);
-			j++;
-		}
-		i++;
-	}
-	return (1);
+	if (someone_died(ph) == 1)
+		return (1);
+	pthread_mutex_lock(ph->plock);
+	printf("%ld ms ph[%d] %s [will die at %ld] [eaten %d]\n", \
+		time, ph->tid + 1, msg, ph->next_meal, ph->eaten);
+	pthread_mutex_unlock(ph->plock);
+	usleep2(tsleep);
+	return (0);
 }
 
-int	ft_atoi(const char *nptr)
+void	update_simflags(t_philo *ph, long tdied)
 {
-	int	res;
-	int	sign;
-
-	res = 0;
-	sign = 1;
-	while ((*nptr >= 9 && *nptr <= 13) || *nptr == 32)
-		nptr++;
-	if (*nptr == 43 || *nptr == 45)
-	{
-		if (*nptr == 45)
-			sign = -1;
-		nptr++;
-	}
-	while (*nptr >= 48 && *nptr <= 57)
-	{
-		res = res * 10 + (*nptr - 48);
-		nptr++;
-	}
-	return (res * sign);
+	pthread_mutex_lock(ph->dlock);
+	*(ph->info->whodied) = ph->tid;
+	*(ph->info->tdied) = tdied;
+	pthread_mutex_unlock(ph->dlock);
 }
 
-int	validated_count(int argc, char **argv)
+int	is_philo_dead(t_philo *ph)
 {
-	int	count;
+	long	time_now;
 
-	if (argc < 5 || argc > 6)
-		return (handle_error1("Error: Incorrect No. of arguments"));
-	if (is_positive_digit(argc, argv) == -1)
-		return (handle_error1("Error: not a valid digit"));
-	count = ft_atoi(argv[1]);
-	if (count == 0 || count > 200)
-		return (handle_error1("Error: Invalid No. of Philosophers"));
-	return (count);
+	time_now = get_time_ms() - ph->info->tstart;
+	if (time_now == -1)
+		return (-1);
+	pthread_mutex_lock(ph->nlock);
+	if (ph->next_meal < time_now)
+	{
+		pthread_mutex_unlock(ph->nlock);
+		return (1);
+	}
+	pthread_mutex_unlock(ph->nlock);
+	return (0);
 }

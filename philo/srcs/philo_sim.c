@@ -40,14 +40,6 @@ void	sim_monitor(t_philo *ph, t_sim *sim)
 	i = 0;
 	while (i < sim->count)
 	{
-		if (is_philo_dead(&ph[i]) == 1)
-		{
-			pthread_mutex_lock(ph->nlock);
-			update_simflags(ph, ph->next_meal);
-			pthread_mutex_unlock(ph->nlock);
-			break;
-		}
-
 		pthread_mutex_lock(sim->alock);
 		if (sim->active == 0)
 		{
@@ -56,6 +48,13 @@ void	sim_monitor(t_philo *ph, t_sim *sim)
 		}
 		pthread_mutex_unlock(sim->alock);
 
+		if (is_philo_dead(&ph[i]) == 1)
+		{
+			pthread_mutex_lock(ph->nlock);
+			update_simflags(ph, ph->next_meal);
+			pthread_mutex_unlock(ph->nlock);
+			break;
+		}
 		if (i == sim->count)
 			i = 0;
 	}

@@ -101,7 +101,7 @@ long	get_time_ms();
 long	time_now(long tstart);
 
 //philo_init
-t_philo			*init_threads(t_general *info, t_mutex *mtx, int count);
+t_philo			*init_philos(t_general *info, t_mutex *mtx, int count);
 pthread_mutex_t *init_vorks(int count);
 void 			init_general_info(t_general *info, int argc, char **argv, t_sim *fl);
 int 			init_mutex(t_mutex *mtx, int count);
@@ -112,17 +112,25 @@ int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
 
 //philo_sim_utils
 int	someone_died(t_philo *ph);
-
-//philo_action_utils
 int		print_ifalive(long time, t_philo *ph, char *msg, long tsleep);
 void	update_simflags(t_philo *ph, long tdied);
 int 	is_philo_dead(t_philo *ph);
+
+//philo_action_utils
 int 	eating(t_philo *ph);
 int 	sleeping(t_philo *ph);
+int	takefork(t_philo *ph, char *msg);
+int	update_num_meals(t_philo *ph);
 
 //philo_action
 int		philo_eats(t_philo *ph);
 int		philo_sleeps(t_philo *ph);
 int 	philo_thinks(t_philo *ph);
+
+//philo_dinner
+int	collect_fork1(t_philo *ph);
+int	collect_fork2(t_philo *ph);
+int	collect_food(t_philo *ph);
+int	drop_fork_tally_meal(t_philo *ph);
 
 #endif

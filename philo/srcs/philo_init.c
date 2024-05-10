@@ -30,7 +30,7 @@ pthread_mutex_t	*init_vorks(int count)
 	return (vorks);
 }
 
-t_philo	*init_threads(t_general *info, t_mutex *mtx, int count)
+t_philo	*init_philos(t_general *info, t_mutex *mtx, int count)
 {
 	t_philo	*ph;
 	int		i;
