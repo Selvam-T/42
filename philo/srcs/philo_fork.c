@@ -15,7 +15,7 @@
 int	vork1_index(int i, int count)
 {
 	int	j;
-	
+
 	j = (i + 1) % count;
 	if (i < j)
 		return (i);
@@ -25,7 +25,7 @@ int	vork1_index(int i, int count)
 int	vork2_index(int i, int count)
 {
 	int	j;
-	
+
 	j = (i + 1) % count;
 	if (i > j)
 		return (i);
@@ -39,14 +39,14 @@ int	vork_index(int i, int count, char fork)
 	odd = 1;
 	if (count % 2 == 0)
 		odd = 0;
-	if (fork == 'r')//right fork
+	if (fork == 'r')
 	{
 		if (odd)
 			return (vork1_index(i, count));
 		else
 			return (vork2_index(i, count));
 	}
-	else //left fork
+	else
 	{
 		if (odd)
 			return (vork2_index(i, count));

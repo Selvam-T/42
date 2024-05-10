@@ -37,6 +37,7 @@ typedef struct s_mutex
 	pthread_mutex_t 	plock;
 	pthread_mutex_t 	dlock;
 	pthread_mutex_t 	alock;
+	pthread_mutex_t		nlock;
 
 }	t_mutex;
 
@@ -64,6 +65,7 @@ typedef struct s_philo
 	pthread_mutex_t 	*plock;
 	pthread_mutex_t 	*dlock;
 	pthread_mutex_t		*alock;
+	pthread_mutex_t		*nlock;
 	t_general			*info;
 }	t_philo;
 
@@ -110,15 +112,13 @@ int	sim_activity(t_philo *ph, t_sim *flag, long *tstart);
 
 //philo_sim_utils
 int	someone_died(t_philo *ph);
-//int no_philo_active(t_philo *ph);
 
 //philo_action_utils
-//void	print_status(long time, t_philo *ph, char *msg);
 int		print_ifalive(long time, t_philo *ph, char *msg, long tsleep);
 void	update_simflags(t_philo *ph, long tdied);
 int 	is_philo_dead(t_philo *ph);
-int 	handle_task(t_philo *ph, long ttact, char *msg);
-int 	handle_task2(t_philo *ph, long ttact, char *msg, int flag);
+int 	eating(t_philo *ph);
+int 	sleeping(t_philo *ph);
 
 //philo_action
 int		philo_eats(t_philo *ph);

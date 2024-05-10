@@ -98,6 +98,7 @@ void	print_mutex_addr(t_philo *ph, int count, t_mutex *mut)
 	printf("Addr plock is %p\n",&mut->plock);
 	printf("Addr dlock is %p\n",&mut->dlock);
 	printf("Addr alock is %p\n",&mut->alock);
+	printf("Addr nlock is %p\n",&mut->nlock);
 	printf("compare it with ph mutexes\n");
 	i = 0;
 	while (i < count)
@@ -107,6 +108,7 @@ void	print_mutex_addr(t_philo *ph, int count, t_mutex *mut)
 		printf("ph[%d] has plock Addr: %p\n",ph->tid + 1, ph[i].plock);
 		printf("ph[%d] has dlock Addr: %p\n",ph->tid + 1, ph[i].dlock);
 		printf("ph[%d] has alock Addr: %p\n",ph->tid + 1, ph[i].alock);
+		printf("ph[%d] has nlock Addr: %p\n",ph->tid + 1, ph[i].nlock);
 		i++;
 	}
 }

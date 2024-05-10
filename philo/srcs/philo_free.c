@@ -33,22 +33,16 @@ void	destroy_mutex(t_mutex *mtx, int flag)
 		pthread_mutex_destroy(&(mtx->plock));
 	if (flag >= 2)
 		pthread_mutex_destroy(&(mtx->dlock));
-	if (flag == 3)
+	if (flag >= 3)
 		pthread_mutex_destroy(&(mtx->alock));
-}
-
-void	*free_ph(t_philo *ph)
-{
-
-	free (ph);
-	ph = NULL;
-	return (NULL);
+	if (flag == 4)
+		pthread_mutex_destroy(&(mtx->nlock));
 }
 
 int	handle_error1(char *msg)
 {
 	printf("%s\n",msg);
-	return (-1);
+	return(-1);
 }
 
 void	*handle_error2(char *msg)
@@ -59,9 +53,11 @@ void	*handle_error2(char *msg)
 
 void	free_all(t_philo *ph, t_mutex *mtx, int count)
 {
-	free_ph(ph);
+	free (ph);
+	ph = NULL;
 	destroy_vorks(mtx->vork, count);
 	pthread_mutex_destroy(&mtx->plock);
 	pthread_mutex_destroy(&mtx->dlock);
 	pthread_mutex_destroy(&mtx->alock);
+	pthread_mutex_destroy(&mtx->nlock);
 }

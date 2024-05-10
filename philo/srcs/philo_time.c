@@ -19,20 +19,20 @@ void	usleep2(long time)
 
 	x = time / 100;
 	i = 0;
-	while(i < x)
+	while (i < x)
 	{
 		usleep(1000 * 100);
 		i++;
 	}
 }
 
-long	get_time_ms()
+long	get_time_ms(void)
 {
-	struct	timeval currenttime;
-	long	millisecs;
-	
+	struct timeval	currenttime;
+	long			millisecs;
+
 	if (gettimeofday(&currenttime, NULL) == -1)
-		return (-1);// ERROR_HANDLE
+		return (-1);
 	millisecs = currenttime.tv_sec * 1000 + currenttime.tv_usec / 1000;
 	return (millisecs);
 }
@@ -40,7 +40,7 @@ long	get_time_ms()
 long	time_now(long tstart)
 {
 	long	timenow;
-	
+
 	timenow = get_time_ms() - tstart;
 	if (timenow == -1)
 		return (-1);
