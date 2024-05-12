@@ -35,8 +35,10 @@ void	destroy_mutex(t_mutex *mtx, int flag)
 		pthread_mutex_destroy(&(mtx->dlock));
 	if (flag >= 3)
 		pthread_mutex_destroy(&(mtx->alock));
-	if (flag == 4)
+	if (flag >= 4)
 		pthread_mutex_destroy(&(mtx->nlock));
+	if (flag == 5)
+		pthread_mutex_destroy(&(mtx->elock));
 }
 
 int	handle_error1(char *msg)
@@ -60,4 +62,5 @@ void	free_all(t_philo *ph, t_mutex *mtx, int count)
 	pthread_mutex_destroy(&mtx->dlock);
 	pthread_mutex_destroy(&mtx->alock);
 	pthread_mutex_destroy(&mtx->nlock);
+	pthread_mutex_destroy(&mtx->elock);
 }

@@ -12,32 +12,15 @@
 
 #include "../philo.h"
 
-int	handle_one_philo(t_philo *ph)
-{
-	long	time_now;
-	long	tsleep;
-
-	time_now = get_time_ms() - ph->info->tstart;
-	if (time_now == -1)
-		return (-1);
-	printf("%ld ms ph[%d] has taken fork 1\n", time_now, ph->tid + 1);
-	tsleep = time_now + ph->info->ttdie;
-	usleep2(tsleep);
-	printf("%ld ms ph[%d] died\n", tsleep, ph->tid + 1);
-	return (0);
-}
-
 void	*sim_routine(void *arg)
 {
 	t_philo		*ph;
 
 	ph = (t_philo *)arg;
-	if (ph->info->count % 2 == 0)
-		usleep(1);
+	if (ph->tid % 2 == 0)
+		usleep(1000);
 	while (1)
 	{
-		if (someone_died(ph) == 1)
-			break ;
 		if (philo_eats(ph) == 1)
 			break ;
 		if (philo_sleeps(ph) == 1)
@@ -62,52 +45,71 @@ void	sim_monitor(t_philo *ph, t_sim *sim)
 			break ;
 		}
 		pthread_mutex_unlock(sim->alock);
-		if (is_philo_dead(&ph[i]) == 1)
+		if ((philo_retired(&ph[i]) != 1) && (philo_dead(&ph[i]) == 1))
 		{
-			pthread_mutex_lock(ph->nlock);
-			update_simflags(ph, ph->next_meal);
-			pthread_mutex_unlock(ph->nlock);
+			pthread_mutex_lock(ph[i].nlock);
+			update_simflags(&ph[i], ph[i].next_meal);
+			pthread_mutex_unlock(ph[i].nlock);
 			break ;
 		}
+		i++;
 		if (i == sim->count)
 			i = 0;
 	}
 }
 
-void	sim_activity(t_philo *ph, t_sim *sim)
-{
-	sim_monitor(ph, sim);
-	pthread_mutex_lock(sim->dlock);
-	if (sim->whodied >= 0)
-		printf("%ld ms ph[%d] died.\n", sim->tdied, sim->whodied + 1);
-	pthread_mutex_unlock(sim->dlock);
-}
-
-int	run_simulation(t_philo *ph, t_sim *sim, long *tstart)
+int	start_threads(t_philo *ph, t_sim *sim)
 {
 	int	i;
 
-	*tstart = get_time_ms();
-	if (*tstart == -1)
+	ph->info->tstart = get_time_ms();
+	if (ph->info->tstart == -1)
 		return (-1);
-	if (sim->count == 1)
-		return (handle_one_philo(ph));
 	i = 0;
 	while (i < sim->count)
 	{
-		ph[i].next_meal = get_time_ms() - *tstart + ph[i].info->ttdie;
+		pthread_mutex_lock(ph[i].nlock);
+		ph[i].next_meal = get_time_ms() - ph[i].info->tstart + ph[i].info->ttdie;
+		pthread_mutex_unlock(ph[i].nlock);
 		if (pthread_create(&(ph[i].td), NULL, sim_routine, \
 			(void *)&(ph[i])) != 0)
 			return (-1);
 		i++;
 	}
-	sim_activity(ph, sim);
+	return (0);
+}
+
+int	join_threads(t_philo *ph, t_sim *sim)
+{
+	int	i;
+
 	i = 0;
+	printf("\nFinal stats for inspection:\n");//DELETE
+	printf("-----------------------------\n");//DELETE
 	while (i < sim->count)
 	{
+		printf("About ph[%d], next_meal is %ld, meals eaten is %d, exit time %ld\n",\
+		ph[i].tid + 1, ph[i].next_meal, ph[i].eaten, ph[i].exit_time);//DELETE
 		if (pthread_join(ph[i].td, NULL) != 0)
 			return (-1);
 		i++;
 	}
+	return (0);
+}
+
+int	run_simulation(t_philo *ph, t_sim *sim)
+{
+	if (sim->count == 1)
+		return (handle_one_philo(ph));
+	
+	if (start_threads(ph, sim) == -1)
+		return (-1);
+	sim_monitor(ph, sim);
+	pthread_mutex_lock(sim->dlock);
+	if (sim->whodied >= 0)
+		printf("%ld ms ph[%d] died.\n", sim->tdied, sim->whodied + 1);
+	pthread_mutex_unlock(sim->dlock);
+	if (join_threads(ph, sim) == -1)
+		return (-1);
 	return (0);
 }

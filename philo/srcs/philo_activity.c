@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_action.c                                     :+:      :+:    :+:   */
+/*   philo_activity.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 13:42:10 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/04/22 13:42:26 by sthiagar         ###   ########.fr       */
+/*   Created: 2024/05/11 14:24:21 by sthiagar          #+#    #+#             */
+/*   Updated: 2024/05/11 14:24:35 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,5 @@ int	philo_thinks(t_philo *ph)
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
-	return (print_ifalive(time_now, ph, "is thinking", 0));
+	return (print_ifalive(time_now, ph, "is thinking", 100));
 }

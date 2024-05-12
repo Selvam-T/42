@@ -32,7 +32,6 @@ void	print_ph(t_philo *ph, int count)
 	while (i < count)
 	{
 		printf("tid [%d]\n", ph[i].tid);
-		//printf("last meal [%ld]\n", ph[i].cur_meal);
 		printf("next meal [%ld]\n", ph[i].next_meal);
 		printf("eaten count [%d]\n", ph[i].eaten);
 		print_info(ph[i].info);
@@ -52,6 +51,7 @@ void	print_fork_allocation(t_philo *ph, int count)
 	i = 0;
 	while (i < count)
 	{
+		
 		printf("ph[%d] right fork is %d\n",ph[i].tid, vork_index(i, count, 'r'));
 		printf("ph[%d] left fork is %d\n",ph[i].tid, vork_index(i, count, 'l'));
 		i++;
@@ -92,23 +92,23 @@ void	print_mutex_addr(t_philo *ph, int count, t_mutex *mut)
 	i = 0;
 	while (i < count)
 	{	
-		printf("Addr vork[%d] is %p\n",i, &mut->vork[i]);
+		printf("Addr vork[%d] is %p\n",i + 1, &mut->vork[i]);
 		i++;
 	}
-	printf("Addr plock is %p\n",&mut->plock);
-	printf("Addr dlock is %p\n",&mut->dlock);
-	printf("Addr alock is %p\n",&mut->alock);
-	printf("Addr nlock is %p\n",&mut->nlock);
-	printf("compare it with ph mutexes\n");
+	//printf("Addr plock is %p\n",&mut->plock);
+	//printf("Addr dlock is %p\n",&mut->dlock);
+	//printf("Addr alock is %p\n",&mut->alock);
+	//printf("Addr nlock is %p\n",&mut->nlock);
+	//printf("compare it with ph mutexes\n");
 	i = 0;
 	while (i < count)
 	{	
-		printf("ph[%d] has vork1 Addr: %p\n",ph->tid + 1, ph[i].vork1);
-		printf("ph[%d] has vork2 Addr: %p\n",ph->tid + 1, ph[i].vork2);
-		printf("ph[%d] has plock Addr: %p\n",ph->tid + 1, ph[i].plock);
-		printf("ph[%d] has dlock Addr: %p\n",ph->tid + 1, ph[i].dlock);
-		printf("ph[%d] has alock Addr: %p\n",ph->tid + 1, ph[i].alock);
-		printf("ph[%d] has nlock Addr: %p\n",ph->tid + 1, ph[i].nlock);
+		printf("ph[%d] has vork1 Addr: %p\n",ph[i].tid + 1, ph[i].vork1);
+		printf("ph[%d] has vork2 Addr: %p\n",ph[i].tid + 1, ph[i].vork2);
+		//printf("ph[%d] has plock Addr: %p\n",ph[i].tid + 1, ph[i].plock);
+		//printf("ph[%d] has dlock Addr: %p\n",ph[i].tid + 1, ph[i].dlock);
+		//printf("ph[%d] has alock Addr: %p\n",ph[i].tid + 1, ph[i].alock);
+		//printf("ph[%d] has nlock Addr: %p\n",ph[i].tid + 1, ph[i].nlock);
 		i++;
 	}
 }

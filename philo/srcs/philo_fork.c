@@ -54,3 +54,37 @@ int	vork_index(int i, int count, char fork)
 			return (vork1_index(i, count));
 	}
 }
+
+/*
+int	vork_index(int i, int count, char fork)
+{
+	int	odd;
+
+	odd = 1;
+	if (count % 2 == 0)
+		odd = 0;
+
+
+	if (fork == 'r')
+	{
+		if (odd)
+			return (i);
+		else
+		{	
+			if (i == count - 1)
+				return (0);
+			return (i + 1);
+		}
+	}
+	else
+	{	
+		if (odd)
+		{	
+			if (i == count - 1)
+				return (0);
+			return (i + 1);
+		}
+		else
+			return (i);
+	}
+}*/

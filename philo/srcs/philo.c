@@ -31,8 +31,9 @@ int	main(int argc, char *argv[])
 	ph = init_philos(&info, &mtx, sim.count);
 	if (ph == NULL)
 		return (handle_error1("Malloc failure"));
-	if (run_simulation(ph, &sim, &(info.tstart)) == -1)
+	if (run_simulation(ph, &sim) == -1)
 		return (handle_error1("Process failure"));
+	//print_mutex_addr(ph, sim.count, &mtx);
 	free_all(ph, &mtx, sim.count);
 	return (0);
 }

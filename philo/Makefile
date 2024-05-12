@@ -6,7 +6,7 @@
 #    By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/04 11:07:11 by sthiagar          #+#    #+#              #
-#    Updated: 2024/04/25 16:13:23 by sthiagar         ###   ########.fr        #
+#    Updated: 2024/05/10 19:19:54 by sthiagar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,11 @@ NAME = 		philo
 SRCS_DIR = 	srcs/
 OBJS_DIR = 	objs/
 
-SOURCE = 	philo.c philo_free.c philo_utils.c philo_validate.c\
-		philo_init.c philo_tests.c philo_time.c philo_fork.c \
-		philo_action.c philo_sim.c philo_action_utils.c \
-		philo_dinner.c		
+SOURCE = 	philo.c philo_free.c philo_print.c philo_validate.c\
+		philo_init.c philo_time.c philo_fork.c \
+		philo_activity.c philo_sim.c philo_activity_utils.c \
+		philo_dinner.c philo_verify.c philo_update.c \
+		philo_tests.c
 
 SRCS = 		$(addprefix $(SRCS_DIR), $(SOURCE))
 OBJS = 		$(addprefix $(OBJS_DIR), $(SOURCE:.c=.o))

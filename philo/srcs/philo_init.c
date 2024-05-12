@@ -44,12 +44,14 @@ t_philo	*init_philos(t_general *info, t_mutex *mtx, int count)
 		ph[i].tid = i;
 		ph[i].next_meal = -1;
 		ph[i].eaten = 0;
+		ph[i].exit_time = 0;//DELETE
 		ph[i].vork1 = &mtx->vork[vork_index(i, count, 'r')];
 		ph[i].vork2 = &mtx->vork[vork_index(i, count, 'l')];
 		ph[i].plock = &mtx->plock;
 		ph[i].dlock = &mtx->dlock;
 		ph[i].alock = &mtx->alock;
 		ph[i].nlock = &mtx->nlock;
+		ph[i].elock = &mtx->elock;
 		ph[i].info = info;
 		i++;
 	}
@@ -90,10 +92,15 @@ int	init_mutex(t_mutex *mtx, int count)
 		destroy_mutex(mtx, 3);
 		return (-1);
 	}
+	if (pthread_mutex_init(&mtx->elock, NULL) != 0)
+	{
+		destroy_mutex(mtx, 4);
+		return (-1);
+	}
 	mtx->vork = init_vorks(count);
 	if (mtx->vork == NULL)
 	{
-		destroy_mutex(mtx, 4);
+		destroy_mutex(mtx, 5);
 		return (-1);
 	}
 	return (0);
