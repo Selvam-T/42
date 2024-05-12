@@ -76,8 +76,7 @@ int	drop_fork_tally_meal(t_philo *ph)
 		pthread_mutex_unlock(ph->vork1);
 		return (1);
 	}
-	//if (update_num_meals(ph) == 1)//REPLACE
-	if (update_num_meals(ph, get_time_ms() - ph->info->tstart) == 1)//DELETE
+	if (update_num_meals(ph) == 1)
 	{
 		pthread_mutex_unlock(ph->vork2);
 		pthread_mutex_unlock(ph->vork1);

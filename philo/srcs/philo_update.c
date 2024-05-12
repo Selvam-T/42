@@ -12,20 +12,18 @@
 
 #include "../philo.h"
 
-int	update_num_meals(t_philo *ph, long time) //REMOVE time
+int	update_num_meals(t_philo *ph)
 {
 	if (ph->info->numeat != -1)
 	{
-		pthread_mutex_lock(ph->elock); //Lock eaten
+		pthread_mutex_lock(ph->elock);
 		ph->eaten += 1;
 		if (ph->eaten >= ph->info->numeat)
 		{
-			printf("ph[%d] eaten %d meals. LEAVE THREAD >>\n",ph->tid + 1, ph->eaten);
 			pthread_mutex_unlock(ph->elock);
-			pthread_mutex_lock(ph->alock); //Lock active
+			pthread_mutex_lock(ph->alock);
 			*(ph->info->active) -= 1;
 			pthread_mutex_unlock(ph->alock);
-			ph->exit_time = time;//DELETE
 			return (1);
 		}
 		pthread_mutex_unlock(ph->elock);

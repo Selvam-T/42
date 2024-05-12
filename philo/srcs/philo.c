@@ -33,7 +33,6 @@ int	main(int argc, char *argv[])
 		return (handle_error1("Malloc failure"));
 	if (run_simulation(ph, &sim) == -1)
 		return (handle_error1("Process failure"));
-	//print_mutex_addr(ph, sim.count, &mtx);
 	free_all(ph, &mtx, sim.count);
 	return (0);
 }

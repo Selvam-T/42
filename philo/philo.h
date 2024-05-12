@@ -60,7 +60,6 @@ typedef struct s_philo
 	int				tid;
 	long			next_meal;
 	int				eaten;
-	long			exit_time; //DELETE
 	pthread_mutex_t	*vork1;
 	pthread_mutex_t	*vork2;
 	pthread_mutex_t	*plock;
@@ -85,7 +84,7 @@ int				philo_dead(t_philo *ph);
 int				philo_retired(t_philo *ph);
 //philo_update
 void			update_simflags(t_philo *ph, long tdied);
-int				update_num_meals(t_philo *ph, long time);//REMOVE time
+int				update_num_meals(t_philo *ph);
 //philo_sim
 int				run_simulation(t_philo *ph, t_sim *sim);
 //philo_fork

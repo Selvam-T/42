@@ -48,8 +48,6 @@ int	philo_dead(t_philo *ph)
 	pthread_mutex_lock(ph->nlock);
 	if (ph->next_meal < time_now)
 	{
-		printf("%ld ms monitor has found ph[%d] is dead ***\n",\
-			time_now, ph->tid + 1);
 		pthread_mutex_unlock(ph->nlock);
 		return (1);
 	}

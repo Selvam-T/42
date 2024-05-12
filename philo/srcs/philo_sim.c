@@ -17,7 +17,7 @@ void	*sim_routine(void *arg)
 	t_philo		*ph;
 
 	ph = (t_philo *)arg;
-	if (ph->tid % 2 == 0)
+	if (ph->tid % 2 != 0)
 		usleep(1000);
 	while (1)
 	{
@@ -84,12 +84,8 @@ int	join_threads(t_philo *ph, t_sim *sim)
 	int	i;
 
 	i = 0;
-	printf("\nFinal stats for inspection:\n");//DELETE
-	printf("-----------------------------\n");//DELETE
 	while (i < sim->count)
 	{
-		printf("About ph[%d], next_meal is %ld, meals eaten is %d, exit time %ld\n",\
-		ph[i].tid + 1, ph[i].next_meal, ph[i].eaten, ph[i].exit_time);//DELETE
 		if (pthread_join(ph[i].td, NULL) != 0)
 			return (-1);
 		i++;

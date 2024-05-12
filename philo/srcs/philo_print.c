@@ -20,6 +20,5 @@ int	print_ifalive(long time, t_philo *ph, char *msg, long tsleep)
 	printf("%ld ms ph[%d] %s\n", time, ph->tid + 1, msg);
 	pthread_mutex_unlock(ph->plock);
 	usleep2(tsleep);
-	//consider update_simflags() if arg flag == 1; //special case of sleeping
 	return (0);
 }

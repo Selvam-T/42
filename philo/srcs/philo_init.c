@@ -44,7 +44,6 @@ t_philo	*init_philos(t_general *info, t_mutex *mtx, int count)
 		ph[i].tid = i;
 		ph[i].next_meal = -1;
 		ph[i].eaten = 0;
-		ph[i].exit_time = 0;//DELETE
 		ph[i].vork1 = &mtx->vork[vork_index(i, count, 'r')];
 		ph[i].vork2 = &mtx->vork[vork_index(i, count, 'l')];
 		ph[i].plock = &mtx->plock;
