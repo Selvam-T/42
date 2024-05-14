@@ -27,7 +27,7 @@ int	destroy_vorks(pthread_mutex_t *vork, int count)
 	return (0);
 }
 
-void	destroy_mutex(t_mutex *mtx, int flag)
+int	destroy_mutex(t_mutex *mtx, int flag)
 {
 	if (flag >= 1)
 		pthread_mutex_destroy(&(mtx->plock));
@@ -39,6 +39,7 @@ void	destroy_mutex(t_mutex *mtx, int flag)
 		pthread_mutex_destroy(&(mtx->nlock));
 	if (flag == 5)
 		pthread_mutex_destroy(&(mtx->elock));
+	return (-1);
 }
 
 int	handle_error1(char *msg)

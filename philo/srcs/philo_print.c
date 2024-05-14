@@ -17,8 +17,9 @@ int	print_ifalive(long time, t_philo *ph, char *msg, long tsleep)
 	if (someone_died(ph) == 1)
 		return (1);
 	pthread_mutex_lock(ph->plock);
-	printf("%ld ms ph[%d] %s\n", time, ph->tid + 1, msg);
+	printf("%ld ms %d %s\n", time, ph->tid + 1, msg);
 	pthread_mutex_unlock(ph->plock);
-	usleep2(tsleep);
+	//usleep2(tsleep);
+	usleep(tsleep);
 	return (0);
 }

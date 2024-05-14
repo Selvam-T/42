@@ -77,31 +77,16 @@ int	init_mutex(t_mutex *mtx, int count)
 	if (pthread_mutex_init(&mtx->plock, NULL) != 0)
 		return (-1);
 	if (pthread_mutex_init(&mtx->dlock, NULL) != 0)
-	{
-		destroy_mutex(mtx, 1);
-		return (-1);
-	}
+		return (destroy_mutex(mtx, 1));
 	if (pthread_mutex_init(&mtx->alock, NULL) != 0)
-	{
-		destroy_mutex(mtx, 2);
-		return (-1);
-	}
+		return (destroy_mutex(mtx, 2));
 	if (pthread_mutex_init(&mtx->nlock, NULL) != 0)
-	{
-		destroy_mutex(mtx, 3);
-		return (-1);
-	}
+		return (destroy_mutex(mtx, 3));
 	if (pthread_mutex_init(&mtx->elock, NULL) != 0)
-	{
-		destroy_mutex(mtx, 4);
-		return (-1);
-	}
+		return (destroy_mutex(mtx, 4));
 	mtx->vork = init_vorks(count);
 	if (mtx->vork == NULL)
-	{
-		destroy_mutex(mtx, 5);
-		return (-1);
-	}
+		return (destroy_mutex(mtx, 5));
 	return (0);
 }
 

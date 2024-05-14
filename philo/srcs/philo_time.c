@@ -6,25 +6,11 @@
 /*   By: sthiagar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 13:32:36 by sthiagar          #+#    #+#             */
-/*   Updated: 2024/02/04 13:36:11 by sthiagar         ###   ########.fr       */
+/*   Updated: 2024/05/13 12:32:51 by sthiagar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-void	usleep2(long time)
-{
-	int	x;
-	int	i;
-
-	x = time / 100;
-	i = 0;
-	while (i < x)
-	{
-		usleep(1000 * 100);
-		i++;
-	}
-}
 
 long	get_time_ms(void)
 {
@@ -46,3 +32,19 @@ long	time_now(long tstart)
 		return (-1);
 	return (timenow);
 }
+/*void	usleep2(long time)
+{
+	int	i;
+	int	t;
+	int	b;
+
+	t = (int)time / 100; //casting to int rounds up value over INT max
+	b = (int)time % 100;
+	i = 0;
+	while (i < t)
+	{
+		usleep(1000 * 100);
+		i++;
+	}
+	usleep(1000 * b);
+}*/

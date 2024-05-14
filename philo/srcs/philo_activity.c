@@ -41,11 +41,15 @@ int	philo_sleeps(t_philo *ph)
 int	philo_thinks(t_philo *ph)
 {
 	long	time_now;
+	int		tsleep;
 
+	tsleep = 1;
+	if (ph->info->count % 2 == 0)
+		tsleep = 0;
 	if (someone_died(ph) == 1)
 		return (1);
 	time_now = get_time_ms() - ph->info->tstart;
 	if (time_now == -1)
 		return (-1);
-	return (print_ifalive(time_now, ph, "is thinking", 100));
+	return (print_ifalive(time_now, ph, "is thinking", tsleep));
 }

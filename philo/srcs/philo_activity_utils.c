@@ -12,7 +12,6 @@
 
 #include "../philo.h"
 
-
 int	takefork(t_philo *ph, char *msg)
 {
 	long	time_now;
@@ -77,7 +76,7 @@ int	handle_one_philo(t_philo *ph)
 	time_now = 0;
 	printf("%ld ms ph[%d] has taken fork 1\n", time_now, ph->tid + 1);
 	tsleep = time_now + ph->info->ttdie;
-	usleep2(tsleep);
+	usleep(tsleep);
 	printf("%ld ms ph[%d] died\n", tsleep, ph->tid + 1);
 	return (0);
 }

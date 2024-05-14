@@ -75,7 +75,7 @@ int				handle_error1(char *msg);
 void			*handle_error2(char *msg);
 int				destroy_vorks(pthread_mutex_t *vork, int count);
 void			free_all(t_philo *ph, t_mutex *mtx, int count);
-void			destroy_mutex(t_mutex *mtx, int flag);
+int				destroy_mutex(t_mutex *mtx, int flag);
 //philo_print
 int				print_ifalive(long time, t_philo *ph, char *msg, long tsleep);
 //philo_verify
@@ -118,5 +118,5 @@ long			time_now(long tstart);
 int				ft_atoi(const char *nptr);
 int				is_positive_digit(int argc, char **argv);
 int				validated_count(int argc, char **argv);
-void	print_mutex_addr(t_philo *ph, int count, t_mutex *mut);
+
 #endif

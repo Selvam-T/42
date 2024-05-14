@@ -17,7 +17,7 @@ void	*sim_routine(void *arg)
 	t_philo		*ph;
 
 	ph = (t_philo *)arg;
-	if (ph->tid % 2 != 0)
+	if (ph->tid % 2 == 0)
 		usleep(1000);
 	while (1)
 	{
@@ -69,7 +69,8 @@ int	start_threads(t_philo *ph, t_sim *sim)
 	while (i < sim->count)
 	{
 		pthread_mutex_lock(ph[i].nlock);
-		ph[i].next_meal = get_time_ms() - ph[i].info->tstart + ph[i].info->ttdie;
+		ph[i].next_meal = get_time_ms() - ph[i].info->tstart + \
+			ph[i].info->ttdie;
 		pthread_mutex_unlock(ph[i].nlock);
 		if (pthread_create(&(ph[i].td), NULL, sim_routine, \
 			(void *)&(ph[i])) != 0)
@@ -97,7 +98,6 @@ int	run_simulation(t_philo *ph, t_sim *sim)
 {
 	if (sim->count == 1)
 		return (handle_one_philo(ph));
-	
 	if (start_threads(ph, sim) == -1)
 		return (-1);
 	sim_monitor(ph, sim);
