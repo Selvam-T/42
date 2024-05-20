@@ -17,7 +17,7 @@ void	*sim_routine(void *arg)
 	t_philo		*ph;
 
 	ph = (t_philo *)arg;
-	if (ph->tid % 2 == 0)
+	if (ph->tid % 2 != 0)
 		usleep(1000);
 	while (1)
 	{
@@ -103,7 +103,11 @@ int	run_simulation(t_philo *ph, t_sim *sim)
 	sim_monitor(ph, sim);
 	pthread_mutex_lock(sim->dlock);
 	if (sim->whodied >= 0)
+	{
+		pthread_mutex_lock(ph->plock);
 		printf("%ld ms ph[%d] died.\n", sim->tdied, sim->whodied + 1);
+		pthread_mutex_unlock(ph->plock);
+	}
 	pthread_mutex_unlock(sim->dlock);
 	if (join_threads(ph, sim) == -1)
 		return (-1);

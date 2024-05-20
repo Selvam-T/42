@@ -32,14 +32,15 @@ long	time_now(long tstart)
 		return (-1);
 	return (timenow);
 }
-/*void	usleep2(long time)
+
+void	usleep2(long time)
 {
 	int	i;
-	int	t;
-	int	b;
+	long	t;
+	long	b;
 
-	t = (int)time / 100; //casting to int rounds up value over INT max
-	b = (int)time % 100;
+	t = time / 100;
+	b = time % 100;
 	i = 0;
 	while (i < t)
 	{
@@ -47,4 +48,4 @@ long	time_now(long tstart)
 		i++;
 	}
 	usleep(1000 * b);
-}*/
+}
