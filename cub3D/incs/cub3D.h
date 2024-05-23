@@ -19,33 +19,43 @@
 # include "../libft/libft.h"
 
 # define PIX 100
+# define WHITE 0xFFFFFF
+# define BLACK 0x000000
+# define RED 0xFF0000
+# define YELLOW 0xFFFF00
+# define BLUE 0x00FFFF
 
 typedef struct s_xy
 {
-	int	x;
-	int	y;
+	int	y;//row , HEIGHT
+	int	x;//column, WIDTH
 } t_xy;
 
 typedef struct s_game
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
+	char	**map;//
 	t_xy	dim;
 	t_xy	pp;
 	t_xy	dv;
-	char	**map;
+	void	*mlx;//
+	void	*win;
+	void	*img;//
+	char	*data;
+	int	bpp;
+	int	size_line;
+	int	endian;
 } t_game;
 
-//error_handle.c
-void	*error_handle1(t_game *game);
 //free.c
-void	free1(t_game *game);
-//map.c
-int	grid_value(char **map, int r, int c);
+void	*free1(t_game *game);
+int	free2(t_game *game);
+int	free3(t_game *game);
+int	exit_game(t_game *game);
 //init.c
 void	*init_graphics(t_game *game, char *str);
 t_game	*init_game();
 //test.c
 void	print_game(t_game *game);
-
+//image.c
+void	create_img(t_game *game);
 #endif

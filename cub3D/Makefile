@@ -14,7 +14,7 @@ NAME = 			cub3D
 
 SRCS_DIR = 		srcs/
 OBJS_DIR = 		objs/
-SRC =			cub3D.c map.c error_handle.c free.c init.c
+SRC =			cub3D.c image.c free.c init.c
 
 SRCS = 			$(addprefix $(SRCS_DIR), $(SRC))
 OBJS = 			$(addprefix $(OBJS_DIR), $(SRC:.c=.o))
