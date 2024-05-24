@@ -61,7 +61,7 @@ int	draw_canvas(t_game *game)
 		}
 		y++;
 	}
-	//horizontal lines
+	//horizontal lines ??
 	y = 1;
 	while (y < game->dim.y)
 	{
@@ -74,7 +74,7 @@ int	draw_canvas(t_game *game)
 		y++;
 	}
 	
-	//vertical lines
+	//vertical lines ??
 	x = 1;
 	while (x < game->dim.x)
 	{

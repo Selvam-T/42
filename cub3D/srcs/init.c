@@ -48,7 +48,7 @@ t_game	*init_game()
 	game = malloc(sizeof(t_game) * 1);
 	if (game == NULL)
 		return (NULL);
-	game->dim.y = 8;//row
+	game->dim.y = 10;//row
 	game->dim.x = 8;//col
 	game->pp.x = 5;
 	game->pp.y = 5;
@@ -63,7 +63,9 @@ t_game	*init_game()
 	game->map[4] = "10000001";
 	game->map[5] = "10000N01";
 	game->map[6] = "10000001";
-	game->map[7] = "11111111";
+	game->map[7] = "10010001";
+	game->map[8] = "10010001";
+	game->map[9] = "11111111";
 	
 	if (init_graphics(game, "Cube3D") == NULL)
 		return (NULL);
