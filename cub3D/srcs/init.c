@@ -41,6 +41,31 @@ void	*init_graphics(t_game *game, char *str)
 	return (game);
 }
 
+void	init_dv(t_game *game, char c)
+{
+//N = (0, -1); S = (0, 1); E = (1, 0); W = (-1, 0) --> player looking direction
+	if (c == 'N' || c == 'S')
+	{
+		game->dv.x = 0;
+		game->dv.y = -1;
+		if (c == 'S')
+			game->dv.y = 1;
+	}
+	if (c == 'E' || c == 'W')
+	{
+		game->dv.y = 0;
+		game->dv.x = 1;
+		if (c == 'W')
+			game->dv.x = -1;
+	}
+}
+
+void	init_cp(t_game *game)
+{
+	//initialize camera plane perpendicular to the direction
+	(void)game;
+}
+
 t_game	*init_game()
 {
 	t_game	*game;
@@ -53,6 +78,9 @@ t_game	*init_game()
 	game->pp.x = 5;
 	game->pp.y = 5;
 
+	init_dv(game, 'N');
+	game->cp.x = 0.66;//this varies in relation to dv?
+	game->cp.y = 0;//this varies in relatin to dv?
 	game->map = malloc(game->dim.y * sizeof(char *));
 	if (game->map == NULL)
 		return (free1(game));

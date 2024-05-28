@@ -17,6 +17,7 @@ int	main()
 {
 	t_game	*game;
 	
+	printf("The tangent of 0.66 is %.2f\n",tan(0.66));
 	game = init_game();
 	if (!game)
 		return(1);

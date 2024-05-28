@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
+# include <math.h>
 
 # define PIX 100
 # define WHITE 0xFFFFFF
@@ -27,19 +28,20 @@
 
 typedef struct s_xy
 {
-	int	y;//row , HEIGHT
-	int	x;//column, WIDTH
+	double	y;//row , HEIGHT
+	double	x;//column, WIDTH
 } t_xy;
 
 typedef struct s_game
 {
-	char	**map;//
+	char	**map;
 	t_xy	dim;
-	t_xy	pp;
-	t_xy	dv;
-	void	*mlx;//
+	t_xy	pp;//position of the player
+	t_xy	dv;//direction of player
+	t_xy	cp;//camera plane ?? not sure if represented as x,y
+	void	*mlx;
 	void	*win;
-	void	*img;//
+	void	*img;
 	char	*data;
 	int	bpp;
 	int	size_line;
